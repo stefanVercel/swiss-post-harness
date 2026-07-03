@@ -1,0 +1,68 @@
+name: tariffs
+type: dim_table
+table: public.tariffs
+grain: one row per weight band of one service (10 rows in demo dataset)
+description: |
+  Swiss Post service catalog broken out by weight band. Five services covered:
+  A-Post and B-Post letter mail; PostPac Priority and PostPac Economy parcels;
+  and Assured for insured parcels with signature. Each row has price in CHF and
+  the tariff's target transit days.
+use_for:
+  - Price lookups by service, weight band, format.
+  - Service comparison (Priority vs Economy vs Assured).
+  - Customer advice: which tariff at which weight.
+do_not_use_for:
+  - Number of shipments (see shipments).
+  - Customer profiles (see customers).
+sample_questions:
+  - Preis A-Post B5 vs B4?
+  - Vergleiche PostPac Priority und Economy in der 2kg-Klasse.
+  - Ab welchem Gewicht ist Assured günstiger als PostPac Priority?
+joins:
+  - target_entity: shipments
+    relationship: one_to_many
+    join_columns:
+      from: id
+      to: tariff_id
+dimensions:
+  - name: id
+    sql: id
+    type: string
+    description: Slug primary key, e.g. "postpac-prio-2kg".
+    profile:
+      distinct_count: 10
+  - name: service
+    sql: service
+    type: string
+    description: Internal service key.
+    profile:
+      sample_values: [a_post, b_post, postpac_priority, postpac_economy, assured]
+  - name: service_label
+    sql: service_label
+    type: string
+    description: Customer-facing service name (e.g. "PostPac Priority").
+  - name: format
+    sql: format
+    type: string
+    profile:
+      sample_values: [letter, parcel, oversize]
+  - name: is_domestic
+    sql: is_domestic
+    type: boolean
+measures:
+  - name: weight_from_g
+    sql: weight_from_g
+    type: min
+    description: Inclusive lower bound of the weight band, in grams.
+  - name: weight_to_g
+    sql: weight_to_g
+    type: max
+    description: Inclusive upper bound of the weight band, in grams.
+  - name: price_chf
+    sql: price_chf
+    type: avg
+    description: Price in CHF for this weight band.
+  - name: transit_days_target
+    sql: transit_days_target
+    type: avg
+    description: Target working days from lodgement to delivery (1 for Priority, 3 for Economy).
