@@ -2,6 +2,7 @@
 
 import useSWR from "swr"
 import { useState } from "react"
+import Link from "next/link"
 import { HarnessChat } from "@/components/harness-chat"
 import { ArtifactsPanel } from "@/components/artifacts-panel"
 import { PostIcon, type PostIconName } from "@/components/post-icon"
@@ -43,6 +44,14 @@ export function HarnessShell() {
           </h1>
           <p className="hidden truncate text-xs text-muted-foreground sm:block">Neon + Filesystem Semantic Layer</p>
         </div>
+        <Link
+          href="/harness"
+          className="ml-auto flex shrink-0 items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:bg-accent"
+        >
+          <PostIcon name="network" size={16} />
+          <span className="hidden sm:inline">Harness ansehen</span>
+          <span className="sm:hidden">Harness</span>
+        </Link>
       </header>
 
       <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr_300px]">
