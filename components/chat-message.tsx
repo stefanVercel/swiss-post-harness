@@ -2,6 +2,8 @@
 
 import type { UIMessage } from "ai"
 import { useState } from "react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
 function ToolPart({ part }: { part: any }) {
   const [open, setOpen] = useState(false)
@@ -74,13 +76,19 @@ export function ChatMessage({ message }: { message: UIMessage }) {
             return (
               <div
                 key={i}
-                className={`whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                className={`rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
                   isUser
-                    ? "rounded-br-sm bg-foreground text-background"
+                    ? "whitespace-pre-wrap rounded-br-sm bg-foreground text-background"
                     : "rounded-bl-sm border border-border bg-card text-card-foreground"
                 }`}
               >
-                {part.text}
+                {isUser ? (
+                  part.text
+                ) : (
+                  <div className="prose-chat">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{part.text}</ReactMarkdown>
+                  </div>
+                )}
               </div>
             )
           }
