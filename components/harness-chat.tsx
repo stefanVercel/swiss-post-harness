@@ -5,6 +5,7 @@ import { DefaultChatTransport } from "ai"
 import { useMemo, useRef, useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ChatMessage } from "@/components/chat-message"
+import { PostIcon } from "@/components/post-icon"
 import type { PersonaMeta } from "@/lib/ui-types"
 
 export function HarnessChat({
@@ -64,9 +65,12 @@ export function HarnessChat({
                   key={ex.label}
                   type="button"
                   onClick={() => submit(ex.prompt)}
-                  className="rounded-lg border border-border bg-card p-3 text-left transition-colors hover:border-primary hover:bg-accent"
+                  className="group rounded-lg border border-border bg-card p-3 text-left transition-colors hover:border-primary hover:bg-accent"
                 >
-                  <div className="text-sm font-semibold text-card-foreground">{ex.label}</div>
+                  <div className="flex items-center gap-2 text-card-foreground">
+                    <PostIcon name="searchconsignment" size={16} className="text-muted-foreground group-hover:text-primary" />
+                    <span className="text-sm font-semibold">{ex.label}</span>
+                  </div>
                   <div className="mt-1 line-clamp-2 text-xs text-muted-foreground">{ex.prompt}</div>
                 </button>
               ))}
@@ -113,7 +117,8 @@ export function HarnessChat({
             placeholder={`Frag ${persona.label}…`}
             className="max-h-40 min-h-[44px] flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
           />
-          <Button type="submit" disabled={busy || !input.trim()} className="h-11 shrink-0">
+          <Button type="submit" disabled={busy || !input.trim()} className="h-11 shrink-0 gap-2">
+            <PostIcon name="send" size={16} />
             Senden
           </Button>
         </div>

@@ -12,6 +12,7 @@
     "@ai-sdk/react": "^4.0.15",
     "@base-ui/react": "^1.5.0",
     "@neondatabase/serverless": "^1.1.0",
+    "@swisspost/design-system-icons": "^10.0.0",
     "@vercel/analytics": "1.6.1",
     "ai": "^7.0.14",
     "class-variance-authority": "^0.7.1",

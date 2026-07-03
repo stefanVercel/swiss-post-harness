@@ -1,6 +1,7 @@
 "use client"
 
 import useSWR from "swr"
+import { PostIcon, type PostIconName } from "@/components/post-icon"
 
 type Artifacts = {
   reports: { id: string; title: string; created_at: string }[]
@@ -39,14 +40,15 @@ export function ArtifactsPanel({ refreshKey }: { refreshKey: number }) {
       </p>
 
       {empty && (
-        <div className="mt-6 rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
+        <div className="mt-6 flex flex-col items-center gap-2 rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
+          <PostIcon name="save" size={24} className="text-muted-foreground/60" />
           Noch keine Artefakte. Bitte einen Write-fähigen Persona (Filiale / Kommunikation) etwas
           speichern lassen.
         </div>
       )}
 
       {data?.drafts && data.drafts.length > 0 && (
-        <Section title="Article-Drafts">
+        <Section title="Article-Drafts" icon="statusedit">
           {data.drafts.map((d) => (
             <div key={d.id} className="rounded-md border border-border bg-card p-2.5">
               <div className="flex items-start justify-between gap-2">
@@ -62,7 +64,7 @@ export function ArtifactsPanel({ refreshKey }: { refreshKey: number }) {
       )}
 
       {data?.reports && data.reports.length > 0 && (
-        <Section title="Reports">
+        <Section title="Reports" icon="document">
           {data.reports.map((r) => (
             <div key={r.id} className="rounded-md border border-border bg-card p-2.5 text-xs font-medium text-card-foreground">
               {r.title}
@@ -72,7 +74,7 @@ export function ArtifactsPanel({ refreshKey }: { refreshKey: number }) {
       )}
 
       {data?.watchlists && data.watchlists.length > 0 && (
-        <Section title="Watchlists">
+        <Section title="Watchlists" icon="favoritestar">
           {data.watchlists.map((w) => (
             <div key={w.id} className="rounded-md border border-border bg-card p-2.5 text-xs font-medium text-card-foreground">
               {w.title}
@@ -84,10 +86,21 @@ export function ArtifactsPanel({ refreshKey }: { refreshKey: number }) {
   )
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  icon,
+  children,
+}: {
+  title: string
+  icon: PostIconName
+  children: React.ReactNode
+}) {
   return (
     <div className="mt-5">
-      <div className="mb-2 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">{title}</div>
+      <div className="mb-2 flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wide text-muted-foreground">
+        <PostIcon name={icon} size={13} />
+        {title}
+      </div>
       <div className="space-y-2">{children}</div>
     </div>
   )

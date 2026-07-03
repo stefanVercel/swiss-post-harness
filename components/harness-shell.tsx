@@ -4,9 +4,16 @@ import useSWR from "swr"
 import { useState } from "react"
 import { HarnessChat } from "@/components/harness-chat"
 import { ArtifactsPanel } from "@/components/artifacts-panel"
+import { PostIcon, type PostIconName } from "@/components/post-icon"
 import type { PersonasResponse } from "@/lib/ui-types"
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
+
+const PERSONA_ICON: Record<string, PostIconName> = {
+  kundenservice: "customercontact",
+  filiale: "branch",
+  kommunikation: "newspaper",
+}
 
 export function HarnessShell() {
   const { data } = useSWR<PersonasResponse>("/api/personas", fetcher)
@@ -27,8 +34,8 @@ export function HarnessShell() {
     <div className="flex h-dvh flex-col bg-background">
       {/* Brand bar */}
       <header className="flex items-center gap-3 border-b border-border bg-card px-4 py-3 md:px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded bg-primary font-heading text-sm font-extrabold text-primary-foreground">
-          P
+        <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
+          <PostIcon name="parcel" size={20} />
         </div>
         <div className="min-w-0">
           <h1 className="font-heading text-sm font-bold leading-tight text-foreground md:text-base">
@@ -57,7 +64,10 @@ export function HarnessShell() {
                     : "text-sidebar-foreground hover:bg-sidebar-accent"
                 }`}
               >
-                <div className="text-sm font-semibold">{p.label}</div>
+                <div className="flex items-center gap-2">
+                  <PostIcon name={PERSONA_ICON[p.slug] ?? "speechbubble"} size={16} />
+                  <span className="text-sm font-semibold">{p.label}</span>
+                </div>
                 <div
                   className={`mt-0.5 hidden text-[11px] leading-snug md:block ${
                     isActive ? "text-primary-foreground/80" : "text-sidebar-foreground/60"

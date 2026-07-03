@@ -4,6 +4,7 @@ import type { UIMessage } from "ai"
 import { useState } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
+import { PostIcon } from "@/components/post-icon"
 
 function ToolPart({ part }: { part: any }) {
   const [open, setOpen] = useState(false)
@@ -27,6 +28,7 @@ function ToolPart({ part }: { part: any }) {
           }`}
           aria-hidden
         />
+        <PostIcon name={isWrite ? "save" : "search"} size={14} className="text-muted-foreground" />
         <span className="font-mono text-xs font-medium">{name}</span>
         <span
           className={`rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${
