@@ -2,6 +2,8 @@
 
 import useSWR from "swr"
 import { PostIcon, type PostIconName } from "@/components/post-icon"
+import { useLocale } from "@/lib/i18n/provider"
+import { UI } from "@/lib/i18n/dictionary"
 
 type Artifacts = {
   reports: { id: string; title: string; created_at: string }[]
@@ -23,6 +25,8 @@ function statusColor(status: string) {
 }
 
 export function ArtifactsPanel({ refreshKey }: { refreshKey: number }) {
+  const { locale } = useLocale()
+  const t = UI[locale]
   const { data } = useSWR<Artifacts>(`/api/artifacts?k=${refreshKey}`, fetcher, {
     refreshInterval: 0,
   })
@@ -33,22 +37,19 @@ export function ArtifactsPanel({ refreshKey }: { refreshKey: number }) {
   return (
     <div className="flex h-full flex-col overflow-y-auto p-4">
       <h3 className="font-heading text-sm font-bold uppercase tracking-wide text-muted-foreground">
-        Gespeicherte Artefakte
+        {t.savedArtifacts}
       </h3>
-      <p className="mt-1 text-xs text-muted-foreground">
-        Wird durch Write-Tools befüllt (Reports, Watchlists, Drafts).
-      </p>
+      <p className="mt-1 text-xs text-muted-foreground">{t.artifactsHint}</p>
 
       {empty && (
         <div className="mt-6 flex flex-col items-center gap-2 rounded-lg border border-dashed border-border p-4 text-center text-xs text-muted-foreground">
           <PostIcon name="save" size={24} className="text-muted-foreground/60" />
-          Noch keine Artefakte. Bitte einen Write-fähigen Persona (Filiale / Kommunikation) etwas
-          speichern lassen.
+          {t.artifactsEmpty}
         </div>
       )}
 
       {data?.drafts && data.drafts.length > 0 && (
-        <Section title="Article-Drafts" icon="statusedit">
+        <Section title={t.articleDrafts} icon="statusedit">
           {data.drafts.map((d) => (
             <div key={d.id} className="rounded-md border border-border bg-card p-2.5">
               <div className="flex items-start justify-between gap-2">
@@ -57,14 +58,14 @@ export function ArtifactsPanel({ refreshKey }: { refreshKey: number }) {
                   {d.status}
                 </span>
               </div>
-              <div className="mt-1 text-[11px] text-muted-foreground">rev {d.rev_count}</div>
+              <div className="mt-1 text-[11px] text-muted-foreground">{t.revPrefix} {d.rev_count}</div>
             </div>
           ))}
         </Section>
       )}
 
       {data?.reports && data.reports.length > 0 && (
-        <Section title="Reports" icon="document">
+        <Section title={t.reports} icon="document">
           {data.reports.map((r) => (
             <div key={r.id} className="rounded-md border border-border bg-card p-2.5 text-xs font-medium text-card-foreground">
               {r.title}
@@ -74,7 +75,7 @@ export function ArtifactsPanel({ refreshKey }: { refreshKey: number }) {
       )}
 
       {data?.watchlists && data.watchlists.length > 0 && (
-        <Section title="Watchlists" icon="favoritestar">
+        <Section title={t.watchlists} icon="favoritestar">
           {data.watchlists.map((w) => (
             <div key={w.id} className="rounded-md border border-border bg-card p-2.5 text-xs font-medium text-card-foreground">
               {w.title}

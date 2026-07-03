@@ -1,6 +1,7 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Archivo, Inter } from 'next/font/google'
+import { LocaleProvider } from '@/lib/i18n/provider'
 import './globals.css'
 
 const archivo = Archivo({
@@ -45,9 +46,9 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="de" className={`light ${archivo.variable} ${inter.variable} bg-background`}>
+    <html lang="en" className={`light ${archivo.variable} ${inter.variable} bg-background`}>
       <body className="font-sans antialiased">
-        {children}
+        <LocaleProvider>{children}</LocaleProvider>
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

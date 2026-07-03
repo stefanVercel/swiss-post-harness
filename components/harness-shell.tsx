@@ -6,6 +6,9 @@ import Link from "next/link"
 import { HarnessChat } from "@/components/harness-chat"
 import { ArtifactsPanel } from "@/components/artifacts-panel"
 import { PostIcon, type PostIconName } from "@/components/post-icon"
+import { LocaleSwitcher } from "@/components/locale-switcher"
+import { useLocale } from "@/lib/i18n/provider"
+import { UI } from "@/lib/i18n/dictionary"
 import type { PersonasResponse } from "@/lib/ui-types"
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
@@ -17,14 +20,16 @@ const PERSONA_ICON: Record<string, PostIconName> = {
 }
 
 export function HarnessShell() {
-  const { data } = useSWR<PersonasResponse>("/api/personas", fetcher)
+  const { locale } = useLocale()
+  const t = UI[locale]
+  const { data } = useSWR<PersonasResponse>(`/api/personas?locale=${locale}`, fetcher)
   const [activeSlug, setActiveSlug] = useState<string | null>(null)
   const [artifactsKey, setArtifactsKey] = useState(0)
 
   if (!data) {
     return (
       <div className="flex h-dvh items-center justify-center text-sm text-muted-foreground">
-        Lade Harness…
+        {t.loading}
       </div>
     )
   }
@@ -42,23 +47,26 @@ export function HarnessShell() {
           <h1 className="font-heading text-sm font-bold leading-tight text-foreground md:text-base">
             {data.domain.name}
           </h1>
-          <p className="hidden truncate text-xs text-muted-foreground sm:block">Neon + Filesystem Semantic Layer</p>
+          <p className="hidden truncate text-xs text-muted-foreground sm:block">{t.semanticLayerLabel}</p>
         </div>
-        <Link
-          href="/harness"
-          className="ml-auto flex shrink-0 items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:bg-accent"
-        >
-          <PostIcon name="network" size={16} />
-          <span className="hidden sm:inline">Harness ansehen</span>
-          <span className="sm:hidden">Harness</span>
-        </Link>
+        <div className="ml-auto flex shrink-0 items-center gap-2">
+          <LocaleSwitcher variant="light" />
+          <Link
+            href="/harness"
+            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:bg-accent"
+          >
+            <PostIcon name="network" size={16} />
+            <span className="hidden sm:inline">{t.viewHarness}</span>
+            <span className="sm:hidden">{t.viewHarnessShort}</span>
+          </Link>
+        </div>
       </header>
 
       <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-[220px_1fr] lg:grid-cols-[220px_1fr_300px]">
         {/* Persona nav */}
         <nav className="flex gap-2 overflow-x-auto border-b border-border bg-sidebar p-3 md:flex-col md:overflow-y-auto md:border-b-0 md:border-r">
           <div className="hidden px-1 pb-1 text-[10px] font-semibold uppercase tracking-wide text-sidebar-foreground/60 md:block">
-            Teams
+            {t.teams}
           </div>
           {data.personas.map((p) => {
             const isActive = p.slug === active.slug
@@ -94,7 +102,7 @@ export function HarnessShell() {
                           : "bg-sidebar-accent/50 text-sidebar-foreground/60"
                     }`}
                   >
-                    {p.writeTools.length ? `${p.writeTools.length} write-tools` : "read-only"}
+                    {p.writeTools.length ? `${p.writeTools.length} ${t.writeToolsSuffix}` : t.readOnly}
                   </span>
                 </div>
               </button>

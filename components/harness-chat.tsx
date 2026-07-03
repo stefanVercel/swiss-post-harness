@@ -6,6 +6,8 @@ import { useMemo, useRef, useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { ChatMessage } from "@/components/chat-message"
 import { PostIcon } from "@/components/post-icon"
+import { useLocale } from "@/lib/i18n/provider"
+import { UI } from "@/lib/i18n/dictionary"
 import type { PersonaMeta } from "@/lib/ui-types"
 
 export function HarnessChat({
@@ -15,6 +17,8 @@ export function HarnessChat({
   persona: PersonaMeta
   onArtifactsMaybeChanged: () => void
 }) {
+  const { locale } = useLocale()
+  const t = UI[locale]
   const [input, setInput] = useState("")
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -23,10 +27,10 @@ export function HarnessChat({
       new DefaultChatTransport({
         api: "/api/chat",
         prepareSendMessagesRequest({ messages }) {
-          return { body: { messages, persona: persona.slug } }
+          return { body: { messages, persona: persona.slug, locale } }
         },
       }),
-    [persona.slug],
+    [persona.slug, locale],
   )
 
   const { messages, sendMessage, status, error, setMessages } = useChat({
@@ -85,7 +89,7 @@ export function HarnessChat({
         {busy && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span className="h-2 w-2 animate-pulse rounded-full bg-primary" />
-            Agent denkt nach…
+            {t.thinking}
           </div>
         )}
 
@@ -114,12 +118,12 @@ export function HarnessChat({
               }
             }}
             rows={1}
-            placeholder={`Frag ${persona.label}…`}
+            placeholder={t.askPlaceholder(persona.label)}
             className="max-h-40 min-h-[44px] flex-1 resize-none rounded-lg border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary"
           />
           <Button type="submit" disabled={busy || !input.trim()} className="h-11 shrink-0 gap-2">
             <PostIcon name="send" size={16} />
-            Senden
+            {t.send}
           </Button>
         </div>
       </form>

@@ -5,8 +5,12 @@ import { useState } from "react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { PostIcon } from "@/components/post-icon"
+import { useLocale } from "@/lib/i18n/provider"
+import { UI } from "@/lib/i18n/dictionary"
 
 function ToolPart({ part }: { part: any }) {
+  const { locale } = useLocale()
+  const t = UI[locale]
   const [open, setOpen] = useState(false)
   const name = part.type?.replace(/^tool-/, "") ?? "tool"
   const state = part.state as string | undefined
@@ -35,15 +39,15 @@ function ToolPart({ part }: { part: any }) {
             isWrite ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground"
           }`}
         >
-          {isWrite ? "write" : "read"}
+          {isWrite ? t.write : t.read}
         </span>
-        <span className="ml-auto text-xs text-muted-foreground">{open ? "verbergen" : "Details"}</span>
+        <span className="ml-auto text-xs text-muted-foreground">{open ? t.hide : t.details}</span>
       </button>
       {open && (
         <div className="space-y-2 border-t border-border px-3 py-2">
           {part.input != null && (
             <div>
-              <div className="mb-1 text-[10px] font-semibold uppercase text-muted-foreground">Input</div>
+              <div className="mb-1 text-[10px] font-semibold uppercase text-muted-foreground">{t.input}</div>
               <pre className="overflow-x-auto rounded bg-background p-2 text-[11px] leading-relaxed">
                 {JSON.stringify(part.input, null, 2)}
               </pre>
@@ -51,7 +55,7 @@ function ToolPart({ part }: { part: any }) {
           )}
           {part.output != null && (
             <div>
-              <div className="mb-1 text-[10px] font-semibold uppercase text-muted-foreground">Output</div>
+              <div className="mb-1 text-[10px] font-semibold uppercase text-muted-foreground">{t.output}</div>
               <pre className="max-h-64 overflow-auto rounded bg-background p-2 text-[11px] leading-relaxed">
                 {JSON.stringify(part.output, null, 2)}
               </pre>
