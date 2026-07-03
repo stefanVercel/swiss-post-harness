@@ -82,6 +82,21 @@
   --sidebar-accent-foreground: oklch(0.97 0 0);
   --sidebar-border: oklch(0.3 0 0);
   --sidebar-ring: oklch(0.86 0.17 95);
+
+  /* Harness showcase accents (/harness) — Swiss Post yellow + ink, with a
+     muted blue and green for persona/lane differentiation in the diagrams. */
+  --sp-yellow: #ffcc00;
+  --sp-yellow-soft: #fff6d6;
+  --sp-ink: #1f1f1f;
+  --sp-ink-soft: #ededed;
+  --sp-blue: #2f6fb0;
+  --sp-blue-soft: #e7eff8;
+  --sp-green: #1c7d1c;
+  --sp-green-soft: #e9f4e9;
+  --sp-amber: #b5730f;
+  --sp-amber-soft: #fbf3e6;
+  --sp-red: #c8102e;
+  --sp-red-soft: #fdecec;
 }
 
 .dark {
@@ -223,4 +238,127 @@
 }
 .prose-chat hr {
   @apply my-3 border-border;
+}
+
+/* ------------------------------------------------------------------ */
+/* Harness showcase (/harness) micro-animations                        */
+/* ------------------------------------------------------------------ */
+@keyframes hx-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hx-rise {
+  animation: hx-rise 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hx-orbit {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.hx-orbit {
+  animation: hx-orbit 6s linear infinite;
+}
+
+@keyframes hx-stream {
+  0% {
+    transform: translateX(-140%) translateY(-50%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(240%) translateY(-50%);
+    opacity: 0;
+  }
+}
+.hx-stream {
+  animation: hx-stream 1.9s ease-in-out infinite;
+}
+
+@keyframes hx-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.25;
+  }
+}
+.hx-blink {
+  animation: hx-blink 1.1s ease-in-out infinite;
+}
+
+@keyframes hx-fluid {
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+  50% {
+    transform: scaleY(0.18);
+  }
+}
+.hx-fluid-bar {
+  transform-origin: bottom;
+  animation: hx-fluid 1.5s ease-in-out infinite;
+}
+
+@keyframes hx-trace {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+.hx-trace-bar {
+  transform-origin: left;
+  animation: hx-trace 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes hx-scan {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(220%);
+  }
+}
+.hx-scan::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--sp-yellow) 55%, transparent), transparent);
+  animation: hx-scan 2s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hx-rise,
+  .hx-orbit,
+  .hx-stream,
+  .hx-blink,
+  .hx-fluid-bar,
+  .hx-trace-bar {
+    animation: none !important;
+  }
+  .hx-scan::before {
+    display: none;
+  }
+  .hx-trace-bar {
+    transform: scaleX(1);
+  }
 }

@@ -35,6 +35,20 @@ export type PostIconName =
   | "chevrondown"
   | "chevronright"
   | "closex"
+  | "server"
+  | "layers"
+  | "network"
+  | "cloud"
+  | "flash"
+  | "gear"
+  | "key"
+  | "eye"
+  | "lockclosed"
+  | "maskshield"
+  | "heartpulse"
+  | "globemeridian"
+  | "rocket"
+  | "brain"
 
 type PostIconProps = {
   name: PostIconName
