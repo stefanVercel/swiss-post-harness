@@ -1,4 +1,4 @@
-import { sql } from "./db"
+import { sql, toJsonSafe } from "./db"
 
 /**
  * Data-access for the artifact + editorial tables (002_artifacts.sql,
@@ -32,16 +32,17 @@ export async function saveReport(title: string, payload: unknown) {
     VALUES (${OWNER}, ${title}, ${JSON.stringify(payload)}::jsonb)
     RETURNING id, title, created_at
   `
-  return rows[0]
+  return toJsonSafe(rows[0])
 }
 
 export async function listReports() {
-  return sql`
+  const rows = await sql`
     SELECT id, title, created_at, updated_at
     FROM public.reports
     WHERE anon_owner = ${OWNER}
     ORDER BY created_at DESC
   `
+  return toJsonSafe(rows)
 }
 
 /* -------------------------------------------------------------------------- */
@@ -54,12 +55,12 @@ export async function saveWatchlist(title: string, payload: unknown, snapshot: u
     VALUES (${OWNER}, ${title}, ${JSON.stringify(payload)}::jsonb, ${JSON.stringify(snapshot)}::jsonb)
     RETURNING id, title, created_at
   `
-  return rows[0]
+  return toJsonSafe(rows[0])
 }
 
 export async function getWatchlist(id: string) {
   const rows = await sql`SELECT * FROM public.watchlists WHERE id = ${id} AND anon_owner = ${OWNER}`
-  return rows[0]
+  return toJsonSafe(rows[0])
 }
 
 export async function refreshWatchlistSnapshot(id: string, snapshot: unknown) {
@@ -69,16 +70,17 @@ export async function refreshWatchlistSnapshot(id: string, snapshot: unknown) {
     WHERE id = ${id} AND anon_owner = ${OWNER}
     RETURNING id, title, snapshot, updated_at
   `
-  return rows[0]
+  return toJsonSafe(rows[0])
 }
 
 export async function listWatchlists() {
-  return sql`
+  const rows = await sql`
     SELECT id, title, created_at, updated_at
     FROM public.watchlists
     WHERE anon_owner = ${OWNER}
     ORDER BY created_at DESC
   `
+  return toJsonSafe(rows)
 }
 
 /* -------------------------------------------------------------------------- */
@@ -91,7 +93,7 @@ export async function saveDigest(title: string, payload: unknown) {
     VALUES (${OWNER}, ${title}, ${JSON.stringify(payload)}::jsonb)
     RETURNING id, title, created_at
   `
-  return rows[0]
+  return toJsonSafe(rows[0])
 }
 
 /* -------------------------------------------------------------------------- */
@@ -168,12 +170,13 @@ export async function getDraftHead(draftId: string): Promise<ArticlePayload | nu
 }
 
 export async function listArticleRevisions(draftId: string) {
-  return sql`
+  const rows = await sql`
     SELECT id, rev_number, author, change_summary, created_at
     FROM public.article_revisions
     WHERE draft_id = ${draftId}
     ORDER BY rev_number DESC
   `
+  return toJsonSafe(rows)
 }
 
 export async function updateArticleDraft(draftId: string, payload: ArticlePayload, changeSummary: string) {
@@ -187,7 +190,7 @@ export async function publishArticle(draftId: string) {
     WHERE id = ${draftId}
     RETURNING id, title, published_at
   `
-  return rows[0]
+  return toJsonSafe(rows[0])
 }
 
 export async function addFeedback(
@@ -205,7 +208,7 @@ export async function addFeedback(
 }
 
 export async function listDrafts() {
-  return sql`
+  const rows = await sql`
     SELECT d.id, d.title, d.status, d.rev_count, d.source_rumor_id, d.created_at, d.updated_at,
            sp.headline AS source_headline
     FROM public.article_drafts d
@@ -213,4 +216,5 @@ export async function listDrafts() {
     WHERE d.anon_owner = ${OWNER}
     ORDER BY d.updated_at DESC
   `
+  return toJsonSafe(rows)
 }

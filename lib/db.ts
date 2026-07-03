@@ -24,6 +24,30 @@ export type QueryResult = {
 }
 
 /**
+ * Recursively convert a DB value into something safe to hand to the model /
+ * tool-output serializer. Postgres returns `Date` objects, `bigint`s and
+ * `Buffer`s which are not plain JSON, and would fail the AI SDK's tool result
+ * validation. Dates become ISO strings, bigints become numbers/strings.
+ */
+export function toJsonSafe<T>(value: T): T {
+  if (value === null || value === undefined) return value
+  if (value instanceof Date) return value.toISOString() as unknown as T
+  if (typeof value === "bigint") {
+    const n = Number(value)
+    return (Number.isSafeInteger(n) ? n : value.toString()) as unknown as T
+  }
+  if (Array.isArray(value)) return value.map((v) => toJsonSafe(v)) as unknown as T
+  if (typeof value === "object") {
+    const out: Record<string, unknown> = {}
+    for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+      out[k] = toJsonSafe(v)
+    }
+    return out as T
+  }
+  return value
+}
+
+/**
  * Execute a single read-only SELECT (or WITH ... SELECT) statement.
  * Throws on anything that could mutate data or on multi-statement input.
  */
@@ -41,6 +65,7 @@ export async function runReadOnlyQuery(query: string): Promise<QueryResult> {
     throw new Error("Query contains a forbidden (write/DDL) keyword.")
   }
 
-  const rows = (await sql.query(trimmed)) as Record<string, unknown>[]
+  const raw = (await sql.query(trimmed)) as Record<string, unknown>[]
+  const rows = raw.map((r) => toJsonSafe(r))
   return { rows, rowCount: rows.length }
 }
