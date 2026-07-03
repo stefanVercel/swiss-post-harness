@@ -1,0 +1,68 @@
+name: service_disruptions
+type: fact_table
+table: public.service_disruptions
+grain: one row per operational disruption event (5 rows in demo dataset)
+description: |
+  Active and resolved operational issues affecting Swiss Post: weather events,
+  strikes, road closures, IT incidents and branch closures. Each row lists
+  the affected cantons/postal codes, severity, start and expected end time,
+  status and which services are impacted.
+use_for:
+  - Active-disruption overview (filter status = 'active').
+  - Impact-by-region and severity-by-cause statistics.
+  - Trigger context for the Kommunikations-Persona editorial workflow.
+do_not_use_for:
+  - Drafting customer messages (see service_pages).
+sample_questions:
+  - Welche aktiven Störungen betreffen den Kanton Bern?
+  - Wie viele Wetter-bedingte Störungen im laufenden Quartal?
+  - Höchste Severity aktuell?
+joins:
+  - target_entity: service_pages
+    relationship: one_to_many
+    join_columns:
+      from: id
+      to: related_disruption_id
+dimensions:
+  - name: id
+    sql: id
+    type: string
+    profile:
+      distinct_count: 5
+  - name: headline
+    sql: headline
+    type: string
+  - name: cause
+    sql: cause
+    type: string
+    profile:
+      sample_values: [weather, strike, road_closure, it_incident, branch_closed]
+  - name: cantons
+    sql: cantons
+    type: array_string
+    description: Postgres text[] of affected cantons. Use "_all" if network-wide.
+  - name: severity
+    sql: severity
+    type: string
+    profile:
+      sample_values: [low, medium, high, critical]
+  - name: status
+    sql: status
+    type: string
+    profile:
+      sample_values: [active, monitoring, resolved]
+  - name: affected_services
+    sql: affected_services
+    type: array_string
+    description: Postgres text[] of services impacted (parcel, letter, cash, packstation).
+measures:
+  - name: started_at
+    sql: started_at
+    type: timestamp
+  - name: expected_end
+    sql: expected_end
+    type: timestamp
+  - name: impact_summary
+    sql: impact_summary
+    type: string
+    description: Short prose sentence — safe to quote in customer-facing drafts.

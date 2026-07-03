@@ -1,10 +1,19 @@
 import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
+import { Archivo, Inter } from 'next/font/google'
 import './globals.css'
 
+const archivo = Archivo({
+  subsets: ['latin'],
+  variable: '--font-heading',
+  weight: ['600', '700', '800'],
+})
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+
 export const metadata: Metadata = {
-  title: 'v0 App',
-  description: 'Created with v0',
+  title: 'Swiss Post Intelligence Harness',
+  description:
+    'One agent, three teams — a Swiss Post intelligence harness with a Neon + filesystem semantic layer, savable case briefings, service dashboards and editorial drafts.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -26,11 +35,8 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  colorScheme: 'light dark',
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: 'white' },
-    { media: '(prefers-color-scheme: dark)', color: 'black' },
-  ],
+  colorScheme: 'light',
+  themeColor: '#FFCC00',
 }
 
 export default function RootLayout({
@@ -39,8 +45,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body className="antialiased">
+    <html lang="de" className={`${archivo.variable} ${inter.variable} bg-background`}>
+      <body className="font-sans antialiased">
         {children}
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
