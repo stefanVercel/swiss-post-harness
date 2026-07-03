@@ -12,13 +12,10 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } fro
 import { PostIcon, type PostIconName } from "@/components/post-icon"
 import { SectionShell, SectionHeader, SoWhat, Key, Label } from "@/components/harness/shared"
 import {
-  ALL_BLOCKS,
-  INFRA,
+  getRegistry,
   PERSONA_BLOCKS,
-  PERSONA_META,
   PERSONA_ORDER,
   SHARED_TOOL_SET,
-  SHOWCASES,
   personasUsingBlock,
   reuseCount,
   writeToolCount,
@@ -26,6 +23,8 @@ import {
   type RunLane,
   type RunStep,
 } from "@/lib/harness-registry"
+import { useLocale } from "@/lib/i18n/provider"
+import { HARNESS } from "@/lib/i18n/harness-copy"
 import { cn } from "@/lib/utils"
 
 const LANE_LABEL: Record<RunLane, string> = {
@@ -49,16 +48,19 @@ const LANE_COLOR: Record<RunLane, string> = {
 const STEP_MS = 1600
 
 export function HarnessExplorer() {
+  const { locale } = useLocale()
+  const c = HARNESS[locale]
+  const reg = getRegistry(locale)
   const [persona, setPersona] = useState<PersonaId>("filiale")
   const [stepIndex, setStepIndex] = useState(0)
   const [playing, setPlaying] = useState(false)
   const transcriptRef = useRef<HTMLDivElement>(null)
 
-  const run = SHOWCASES[persona].run
+  const run = reg.showcases[persona].run
   const active = run[stepIndex]
   const atPark = active?.pause === true
   const atEnd = stepIndex >= run.length - 1
-  const accent = PERSONA_META[persona].accent
+  const accent = reg.personaMeta[persona].accent
 
   const reset = useCallback(() => {
     setStepIndex(0)
@@ -99,19 +101,21 @@ export function HarnessExplorer() {
   return (
     <SectionShell id="harness-run">
       <SectionHeader
-        eyebrow="Der interaktive Beweis"
+        eyebrow={c.runEyebrow}
         title={
           <>
-            Sieh zu, wie ein Run den <Key>geteilten Harness</Key> zum Leuchten bringt.
+            {c.runTitlePre}
+            <Key>{c.runTitleKey}</Key>
+            {c.runTitlePost}
           </>
         }
-        lead="Kundenservice, Filiale und Kommunikation sind nicht drei Produkte — sie sind drei Kompositionen eines Agenten: dasselbe Modell, dieselbe Sandbox, derselbe Semantic Layer, unterschiedlich nur in den Skills und Write-Tools, die sie einschalten. Wähl eine Persona und spiel den Run: links die Oberfläche, die ein Mensch sieht; rechts die geteilte Anatomie, die jeder Schritt live erhellt."
+        lead={c.runLead}
       />
 
       {/* Persona selector */}
-      <div role="tablist" aria-label="Persona wählen" className="mt-8 grid gap-2.5 sm:grid-cols-3">
+      <div role="tablist" aria-label={c.personaSelectAria} className="mt-8 grid gap-2.5 sm:grid-cols-3">
         {PERSONA_ORDER.map((p) => {
-          const meta = PERSONA_META[p]
+          const meta = reg.personaMeta[p]
           const writes = writeToolCount(p)
           const selected = p === persona
           return (
@@ -140,7 +144,7 @@ export function HarnessExplorer() {
                       : { background: meta.accent.color, color: meta.accent.on }
                   }
                 >
-                  {writes === 0 ? "read-only" : `${writes} write`}
+                  {writes === 0 ? c.readOnlyBadge : `${writes} ${c.writeBadge}`}
                 </span>
               </span>
               <span className="mt-0.5 text-[12.5px] leading-snug text-muted-foreground">{meta.tagline}</span>
@@ -154,16 +158,16 @@ export function HarnessExplorer() {
         <div className="flex flex-col overflow-hidden rounded-lg border border-border bg-card shadow-sm">
           <div className="flex items-center justify-between gap-2 border-b border-border bg-muted/60 px-3 py-2">
             <span className="min-w-0 truncate font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-              {PERSONA_META[persona].surface}
+              {reg.personaMeta[persona].surface}
             </span>
             <div className="flex items-center gap-1">
-              <ControlButton label={playing ? "Run pausieren" : atEnd ? "Run fertig" : "Run abspielen"} onClick={() => setPlaying((v) => !v)} disabled={atEnd}>
+              <ControlButton label={playing ? c.ctrlPause : atEnd ? c.ctrlDone : c.ctrlPlay} onClick={() => setPlaying((v) => !v)} disabled={atEnd}>
                 <PostIcon name={playing ? "closex" : "chevronright"} size={16} />
               </ControlButton>
-              <ControlButton label="Schritt vor" onClick={advance} disabled={atEnd}>
+              <ControlButton label={c.ctrlStep} onClick={advance} disabled={atEnd}>
                 <PostIcon name="chevronright" size={16} />
               </ControlButton>
-              <ControlButton label="Run zurücksetzen" onClick={reset} disabled={stepIndex === 0 && !playing}>
+              <ControlButton label={c.ctrlReset} onClick={reset} disabled={stepIndex === 0 && !playing}>
                 <PostIcon name="history" size={16} />
               </ControlButton>
             </div>
@@ -176,7 +180,7 @@ export function HarnessExplorer() {
             aria-valuemin={0}
             aria-valuemax={run.length}
             aria-valuenow={stepIndex + 1}
-            aria-label="Run-Fortschritt"
+            aria-label={c.progressAria}
           >
             <div className="h-full transition-all duration-500 ease-out" style={{ width: `${progress}%`, background: atEnd ? "var(--sp-green)" : accent.color }} />
           </div>
@@ -215,7 +219,7 @@ export function HarnessExplorer() {
                 style={{ borderColor: "color-mix(in srgb, var(--sp-green) 40%, transparent)", background: "var(--sp-green-soft)" }}
               >
                 <PostIcon name="checkmark" size={16} className="shrink-0" />
-                <span>{SHOWCASES[persona].outcome}</span>
+                <span>{reg.showcases[persona].outcome}</span>
               </div>
             ) : null}
           </div>
@@ -223,36 +227,33 @@ export function HarnessExplorer() {
 
         {/* RIGHT: the shared anatomy, lit live */}
         <div className="space-y-3">
-          <AnatomyRow label={`Skills geladen · ${composition.skills.length}`} icon="statusedit">
+          <AnatomyRow label={c.skillsLoaded(composition.skills.length)} icon="statusedit">
             {composition.skills.map((id) => (
               <LitChip key={id} id={id} lit={usedBlocks.has(id)} accent={accent} />
             ))}
           </AnatomyRow>
 
-          <AnatomyRow label={`Tools verfügbar · ${composition.tools.length}`} icon="gear">
+          <AnatomyRow label={c.toolsAvailable(composition.tools.length)} icon="gear">
             {composition.tools.map((id) => (
               <LitChip key={id} id={id} lit={usedBlocks.has(id)} accent={accent} write={!SHARED_TOOL_SET.has(id)} />
             ))}
           </AnatomyRow>
 
-          <AnatomyRow label={`Semantic Layer · ${composition.semantic.length} Dateien`} icon="database">
+          <AnatomyRow label={c.semanticFiles(composition.semantic.length)} icon="database">
             {composition.semantic.map((id) => (
               <LitChip key={id} id={id} lit={usedBlocks.has(id)} accent={accent} />
             ))}
           </AnatomyRow>
 
-          <AnatomyRow label={`Infrastruktur · ${Object.keys(INFRA).length} Primitives`} icon="server">
-            {Object.keys(INFRA).map((id) => (
-              <LitChip key={id} id={id} lit={activeInfra === id} accent={{ color: "var(--sp-ink)", soft: "var(--sp-ink-soft)", on: "#fff" }} icon={INFRA[id].icon} />
+          <AnatomyRow label={c.infraPrimitives(Object.keys(reg.infra).length)} icon="server">
+            {Object.keys(reg.infra).map((id) => (
+              <LitChip key={id} id={id} lit={activeInfra === id} accent={{ color: "var(--sp-ink)", soft: "var(--sp-ink-soft)", on: "#fff" }} icon={reg.infra[id].icon} />
             ))}
           </AnatomyRow>
         </div>
       </div>
 
-      <SoWhat className="mt-8">
-        Ein Agent, drei Jobs, null Forks: die Anatomie ändert sich nie — nur welche Teile eine Anfrage erhellt. So sieht
-        „ein Harness, viele Agenten“ zur Laufzeit aus.
-      </SoWhat>
+      <SoWhat className="mt-8">{c.runSoWhat}</SoWhat>
     </SectionShell>
   )
 }
@@ -376,18 +377,15 @@ function ToolCallCard({ event, cmd, stdout }: { readonly event: string; readonly
 }
 
 function ChartMockCard() {
-  const rows = [
-    { label: "Zürich", w: "100%" },
-    { label: "Bern", w: "72%" },
-    { label: "Waadt", w: "58%" },
-    { label: "Aargau", w: "41%" },
-  ]
+  const { locale } = useLocale()
+  const c = HARNESS[locale]
+  const rows = c.chartRows
   return (
     <div className="mr-auto w-[92%] overflow-hidden rounded-md border border-border bg-card shadow-sm">
       <div className="flex items-center justify-between border-b border-border bg-muted/60 px-2.5 py-1.5">
         <span className="inline-flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-wide text-foreground">
           <PostIcon name="dashboard" size={12} />
-          Priority-Volumen · nach Kanton
+          {c.chartTitle}
         </span>
         <span className="rounded bg-accent px-1.5 py-0.5 font-mono text-[9px] uppercase text-foreground">chart</span>
       </div>
@@ -410,47 +408,48 @@ function ChartMockCard() {
 type ArtifactKindMock = "report" | "watchlist" | "digest" | "draft"
 type ArtifactStatus = "saved" | "in_review" | "revised" | "published"
 
-const ARTIFACT_META: Record<ArtifactKindMock, { title: string; icon: PostIconName }> = {
-  report: { title: "Case-Briefing", icon: "document" },
-  watchlist: { title: "Watchlist", icon: "favoritestar" },
-  digest: { title: "Digest", icon: "newsletter" },
-  draft: { title: "Service-Seiten-Draft", icon: "newspaper" },
+const ARTIFACT_ICON: Record<ArtifactKindMock, PostIconName> = {
+  report: "document",
+  watchlist: "favoritestar",
+  digest: "newsletter",
+  draft: "newspaper",
 }
 
-const STATUS_META: Record<ArtifactStatus, { label: string; sub: string; color: string }> = {
-  saved: { label: "saved", sub: "in der Library gespeichert", color: "var(--sp-blue)" },
-  in_review: { label: "in review", sub: "im Editorial-Review", color: "var(--sp-amber)" },
-  revised: { label: "revised", sub: "zurück in der Queue", color: "var(--sp-blue)" },
-  published: { label: "published", sub: "live auf post.ch", color: "var(--sp-green)" },
+const STATUS_COLOR: Record<ArtifactStatus, string> = {
+  saved: "var(--sp-blue)",
+  in_review: "var(--sp-amber)",
+  revised: "var(--sp-blue)",
+  published: "var(--sp-green)",
 }
 
 function ArtifactCard({ kind, status, accent }: { readonly kind: ArtifactKindMock; readonly status: ArtifactStatus; readonly accent: string }) {
-  const meta = ARTIFACT_META[kind]
-  const st = STATUS_META[status]
+  const { locale } = useLocale()
+  const c = HARNESS[locale]
   return (
     <div className="mr-auto flex w-[92%] items-center gap-2.5 rounded-md border border-border bg-card px-3 py-2.5 shadow-sm" style={{ borderLeft: `3px solid ${accent}` }}>
       <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded bg-muted text-foreground" aria-hidden>
-        <PostIcon name={meta.icon} size={16} />
+        <PostIcon name={ARTIFACT_ICON[kind]} size={16} />
       </span>
       <div className="min-w-0 flex-1">
-        <span className="block truncate font-heading text-[13px] font-bold text-card-foreground">{meta.title}</span>
-        <span className="block truncate text-[11px] text-muted-foreground">{st.sub}</span>
+        <span className="block truncate font-heading text-[13px] font-bold text-card-foreground">{c.artifactTitles[kind]}</span>
+        <span className="block truncate text-[11px] text-muted-foreground">{c.statusSubs[status]}</span>
       </div>
-      <span className="shrink-0 rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-white" style={{ background: st.color }}>
-        {st.label}
+      <span className="shrink-0 rounded px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wide text-white" style={{ background: STATUS_COLOR[status] }}>
+        {c.statusLabels[status]}
       </span>
     </div>
   )
 }
 
 function ParkedCard() {
+  const { locale } = useLocale()
   return (
     <div
       className="mr-auto flex w-[92%] items-center gap-2 rounded-md border border-dashed px-3 py-2 text-[12px]"
       style={{ color: "var(--sp-amber)", borderColor: "color-mix(in srgb, var(--sp-amber) 50%, transparent)", background: "var(--sp-amber-soft)" }}
     >
       <PostIcon name="history" size={14} className="shrink-0" />
-      <span>Durable Workflow geparkt — null Compute — resumt von exakt diesem Schritt.</span>
+      <span>{HARNESS[locale].parked}</span>
     </div>
   )
 }
@@ -477,12 +476,13 @@ function LitChip({
   readonly write?: boolean
   readonly icon?: PostIconName
 }) {
-  const block = ALL_BLOCKS[id]
+  const { locale } = useLocale()
+  const block = getRegistry(locale).allBlocks[id]
   const count = reuseCount(id)
   return (
     <span
       className="inline-flex items-center gap-1 rounded px-2 py-1 font-mono text-[11px] leading-none transition-all"
-      title={block ? `${block.blurb} · genutzt von ${personasUsingBlock(id).length} Persona(s)` : id}
+      title={block ? HARNESS[locale].reuseTooltip(block.blurb, personasUsingBlock(id).length) : id}
       style={
         lit
           ? { background: accent.color, color: accent.on, border: "1px solid transparent", boxShadow: "0 1px 2px rgba(0,0,0,0.12)" }

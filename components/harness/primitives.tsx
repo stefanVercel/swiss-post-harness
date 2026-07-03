@@ -1,7 +1,11 @@
+"use client"
+
 import type { ReactNode } from "react"
 import { PostIcon } from "@/components/post-icon"
 import { SectionShell, SectionHeader, Key, Label } from "@/components/harness/shared"
-import { INFRA, LAYERS } from "@/lib/harness-registry"
+import { getRegistry } from "@/lib/harness-registry"
+import { useLocale } from "@/lib/i18n/provider"
+import { HARNESS } from "@/lib/i18n/harness-copy"
 
 /**
  * "The technology" — the managed Vercel primitives every turn is composed from,
@@ -24,17 +28,22 @@ const VIZ: Record<string, ReactNode> = {
 }
 
 export function Primitives() {
-  const cards = Object.values(INFRA)
+  const { locale } = useLocale()
+  const c = HARNESS[locale]
+  const reg = getRegistry(locale)
+  const cards = Object.values(reg.infra)
   return (
     <SectionShell id="primitives" tint="soft">
       <SectionHeader
-        eyebrow="Die Technologie · Vercel AI Primitives"
+        eyebrow={c.techEyebrow}
         title={
           <>
-            Die Primitives unter jedem Turn — komponiert von <Key>Eve</Key>.
+            {c.techTitlePre}
+            <Key>{c.techTitleKey}</Key>
+            {c.techTitlePost}
           </>
         }
-        lead="Der Harness ist kein Framework, das wir warten. Er ist eine dünne Komposition gemanagter Vercel-Primitives, verdrahtet von Eve — Vercels Agent-Framework. Jedes Primitive macht genau eine Sache; Eve lässt sie als eines wirken."
+        lead={c.techLead}
       />
 
       {/* Eve framing strip */}
@@ -45,13 +54,11 @@ export function Primitives() {
           </span>
           <div>
             <p className="m-0 font-heading text-lg font-bold">Eve</p>
-            <p className="m-0 font-mono text-[10.5px] uppercase tracking-[0.14em] text-primary">the agent framework</p>
+            <p className="m-0 font-mono text-[10.5px] uppercase tracking-[0.14em] text-primary">{c.eveTag}</p>
           </div>
         </div>
         <p className="m-0 text-[14px] leading-relaxed text-sidebar-foreground/80 sm:border-l sm:border-sidebar-border sm:pl-6">
-          Du schreibst einen Agenten als Ordner von Dateien. Eve nimmt diesen Ordner und verdrahtet ihn auf die neun
-          Primitives unten — Model-Toolkit, Gateway, Sandboxes, durable Workflows, Fluid Compute, Traces, sichere
-          Konnektivität, Bot- und Identity-Schutz und das UI-Layer — damit das Team Verhalten shippt, nicht Plumbing.
+          {c.eveParagraph}
         </p>
       </div>
 
@@ -85,9 +92,9 @@ export function Primitives() {
 
       {/* Build / Run / Govern strip */}
       <div className="mt-10">
-        <Label>Eine Ordnerstruktur — Eve mappt sie auf die Runtime</Label>
+        <Label>{c.foldersLabel}</Label>
         <div className="mt-3 grid gap-3 md:grid-cols-3">
-          {LAYERS.map((layer, i) => (
+          {reg.layers.map((layer, i) => (
             <div key={layer.id} className="rounded-lg border border-border bg-card p-4 shadow-sm">
               <div className="flex items-center gap-2">
                 <span className="flex h-6 w-6 items-center justify-center rounded bg-foreground font-mono text-[11px] font-bold text-background">
@@ -102,8 +109,8 @@ export function Primitives() {
                     key={id}
                     className="inline-flex items-center gap-1 rounded border border-border bg-muted/60 px-1.5 py-0.5 font-mono text-[10px] text-foreground"
                   >
-                    <PostIcon name={INFRA[id].icon} size={12} className="text-muted-foreground" />
-                    {INFRA[id].name}
+                    <PostIcon name={reg.infra[id].icon} size={12} className="text-muted-foreground" />
+                    {reg.infra[id].name}
                   </span>
                 ))}
               </div>
@@ -122,7 +129,13 @@ export function Primitives() {
 const chip =
   "rounded border border-border bg-card px-2 py-1 font-mono text-[10.5px] leading-none text-foreground shadow-sm"
 
+function useViz() {
+  const { locale } = useLocale()
+  return HARNESS[locale].viz
+}
+
 function VizAiSdk() {
+  const v = useViz()
   return (
     <div className="flex w-full items-center justify-center gap-3">
       <div className="relative flex h-[84px] w-[84px] items-center justify-center">
@@ -134,7 +147,7 @@ function VizAiSdk() {
         </div>
       </div>
       <div className="flex flex-col gap-1">
-        <span className="font-mono text-[9px] uppercase tracking-wide text-muted-foreground">one toolkit</span>
+        <span className="font-mono text-[9px] uppercase tracking-wide text-muted-foreground">{v.oneToolkit}</span>
         <span className={chip}>generateObject</span>
         <span className={chip}>any model</span>
       </div>
@@ -170,6 +183,7 @@ function VizGateway() {
 }
 
 function VizSandbox() {
+  const v = useViz()
   return (
     <div className="w-full">
       <div className="rounded-md border border-dashed border-primary bg-card p-2 shadow-sm">
@@ -180,49 +194,51 @@ function VizSandbox() {
           </span>
           <span className="inline-flex items-center gap-1 font-mono text-[9px] uppercase tracking-wide text-muted-foreground">
             <span aria-hidden className="hx-blink h-1.5 w-1.5 rounded-full" style={{ background: "var(--sp-green)" }} />
-            isoliert
+            {v.isolated}
           </span>
         </div>
         <pre className="mt-1.5 overflow-hidden rounded bg-sidebar px-2 py-1 font-mono text-[10px] leading-snug text-primary">
           <span className="text-sidebar-foreground/50">$ </span>bash · query_database
         </pre>
-        <p className="mt-1 font-mono text-[9px] text-muted-foreground">semantic layer eingehängt</p>
+        <p className="mt-1 font-mono text-[9px] text-muted-foreground">{v.semanticMounted}</p>
       </div>
       <div className="mt-1.5 flex items-center justify-center gap-1 font-mono text-[9px] uppercase tracking-wide text-muted-foreground">
-        <span>boot</span>
+        <span>{v.boot}</span>
         <span aria-hidden>→</span>
-        <span className="font-bold text-foreground">run</span>
+        <span className="font-bold text-foreground">{v.run}</span>
         <span aria-hidden>→</span>
-        <span>dispose</span>
+        <span>{v.dispose}</span>
       </div>
     </div>
   )
 }
 
 function VizWorkflow() {
+  const v = useViz()
   return (
     <div className="w-full">
       <div className="flex items-center gap-1 font-mono text-[10px] uppercase tracking-wide">
-        <span className="rounded bg-foreground px-2 py-1 text-background">run</span>
+        <span className="rounded bg-foreground px-2 py-1 text-background">{v.run}</span>
         <span className="h-px w-2 bg-border" aria-hidden />
         <span
           className="inline-flex items-center gap-1 rounded border border-dashed px-2 py-1"
           style={{ color: "var(--sp-amber)", borderColor: "var(--sp-amber)" }}
         >
           <span className="hx-blink h-1.5 w-1.5 rounded-full" style={{ background: "var(--sp-amber)" }} aria-hidden />
-          parked
+          {v.parked}
         </span>
         <span className="h-px w-2 bg-border" aria-hidden />
         <span className="rounded px-2 py-1 text-white" style={{ background: "var(--sp-green)" }}>
           resume
         </span>
       </div>
-      <p className="mt-2 text-center font-mono text-[10px] text-muted-foreground">suspend → resume vom exakten Step</p>
+      <p className="mt-2 text-center font-mono text-[10px] text-muted-foreground">{v.suspendResume}</p>
     </div>
   )
 }
 
 function VizFluid() {
+  const v = useViz()
   return (
     <div className="flex w-full flex-col items-center gap-1">
       <div className="flex h-14 items-end gap-1.5">
@@ -231,8 +247,8 @@ function VizFluid() {
         ))}
       </div>
       <div className="flex w-full items-center justify-between font-mono text-[9.5px] uppercase tracking-wide text-muted-foreground">
-        <span>work</span>
-        <span>→ 0 wenn idle</span>
+        <span>{v.work}</span>
+        <span>{v.idleZero}</span>
       </div>
     </div>
   )
@@ -261,6 +277,7 @@ function VizObservability() {
 }
 
 function VizConnect() {
+  const v = useViz()
   return (
     <div className="flex w-full flex-col items-center gap-1.5">
       <div className="flex w-full items-center justify-between gap-1">
@@ -277,14 +294,15 @@ function VizConnect() {
         </span>
       </div>
       <span className="rounded bg-accent px-2 py-0.5 font-mono text-[9px] uppercase tracking-wide text-foreground">
-        scoped · kurzlebiger Token
+        {v.scopedToken}
       </span>
-      <span className="font-mono text-[9px] text-muted-foreground">keine langlebigen Secrets</span>
+      <span className="font-mono text-[9px] text-muted-foreground">{v.noSecrets}</span>
     </div>
   )
 }
 
 function VizSecurity() {
+  const v = useViz()
   return (
     <div className="flex w-full items-center justify-center gap-3">
       <div className="flex flex-col gap-1.5">
@@ -292,16 +310,16 @@ function VizSecurity() {
           className="inline-flex items-center gap-1 rounded border px-2 py-1 font-mono text-[10px]"
           style={{ color: "var(--sp-green)", borderColor: "color-mix(in srgb, var(--sp-green) 40%, transparent)", background: "var(--sp-green-soft)" }}
         >
-          <PostIcon name="checkmark" size={11} /> human
+          <PostIcon name="checkmark" size={11} /> {v.human}
         </span>
         <span
           className="inline-flex items-center gap-1 rounded border px-2 py-1 font-mono text-[10px] line-through"
           style={{ color: "var(--sp-red)", borderColor: "color-mix(in srgb, var(--sp-red) 40%, transparent)", background: "var(--sp-red-soft)" }}
         >
-          <PostIcon name="closex" size={11} /> bot
+          <PostIcon name="closex" size={11} /> {v.bot}
         </span>
         <span className="inline-flex items-center gap-1 rounded border border-border bg-accent px-2 py-1 font-mono text-[10px] text-foreground">
-          <PostIcon name="lockclosed" size={11} /> Passport
+          <PostIcon name="lockclosed" size={11} /> {v.passport}
         </span>
       </div>
       <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full" aria-hidden>
@@ -313,11 +331,12 @@ function VizSecurity() {
 }
 
 function VizElements() {
+  const v = useViz()
   return (
     <div className="flex w-full items-center justify-center gap-3">
       <div className="flex flex-col gap-1.5">
         <span className="rounded rounded-bl-none bg-foreground px-2.5 py-1.5 text-[10px] font-semibold text-background">
-          Antwort ✓
+          {v.answer}
         </span>
         <span className="rounded border border-border bg-card px-2.5 py-1 font-mono text-[9px] text-muted-foreground">
           finalize_answer

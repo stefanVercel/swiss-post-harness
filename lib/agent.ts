@@ -2,11 +2,12 @@ import { ToolLoopAgent, stepCountIs, type InferAgentUIMessage } from "ai"
 import { domain, getPersona, loadPersonaPrompt, loadPersonaSkills } from "./domain"
 import { buildGroundingContext } from "./semantic-layer"
 import { readTools, writeToolsFor } from "./tools"
+import { LOCALE_NAME, toLocale, type Locale } from "./i18n/config"
 
 const MODEL = "anthropic/claude-sonnet-4.5"
 
 /** Compose the full system prompt for a persona from all grounding sources. */
-function buildInstructions(personaSlug: string): string {
+function buildInstructions(personaSlug: string, locale: Locale): string {
   const persona = getPersona(personaSlug)
   if (!persona) throw new Error(`Unknown persona: ${personaSlug}`)
 
@@ -24,6 +25,9 @@ function buildInstructions(personaSlug: string): string {
 
   return [
     `# ${domain.name} — Persona: ${persona.label} (${persona.role})`,
+    "",
+    `## Language`,
+    `Always write your entire response to the user in ${LOCALE_NAME[locale]}, including all prose, headings, chart labels, table headers and card text. Keep identifiers, SQL, tool names and code language-neutral. If the user writes in another language, still answer in ${LOCALE_NAME[locale]} unless they explicitly ask you to switch.`,
     "",
     `Answer style: ${domain.agent.answerStyle.voice}.`,
     `Never do: ${domain.agent.answerStyle.avoid.join("; ")}.`,
@@ -46,7 +50,7 @@ function buildInstructions(personaSlug: string): string {
 }
 
 /** Build a ToolLoopAgent scoped to a single persona's capabilities. */
-export function buildAgent(personaSlug: string) {
+export function buildAgent(personaSlug: string, locale: Locale = "en") {
   const persona = getPersona(personaSlug)
   if (!persona) throw new Error(`Unknown persona: ${personaSlug}`)
 
@@ -57,7 +61,7 @@ export function buildAgent(personaSlug: string) {
 
   return new ToolLoopAgent({
     model: MODEL,
-    instructions: buildInstructions(personaSlug),
+    instructions: buildInstructions(personaSlug, toLocale(locale)),
     tools,
     stopWhen: stepCountIs(12),
   })
