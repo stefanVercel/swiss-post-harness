@@ -1,186 +1,44 @@
-/**
- * Swiss Post domain pack — Post CH / Die Schweizerische Post intelligence harness.
- *
- * Satisfies the `DomainConfig` contract. Pure data only (no Node built-ins):
- * the persona definitions here drive both the UI (labels, taglines, suggestion
- * chips) and server-side capability (`skills`, `writeTools`). Path fields are
- * relative to this directory and resolved by the Node/agent-side loaders.
- *
- * Three personas that match Swiss Post's actual buyer surface:
- *   • Kundenservice — read-only shipment / tariff / service-point lookups.
- *   • Filiale       — frontline / KAM view with saveable case briefings and
- *                     business-customer watchlists.
- *   • Kommunikation — post.ch editorial team; drafts service pages from the
- *                     `service_pages` source table and runs the durable
- *                     editorial-review workflow before publish.
- */
-import type { DomainConfig } from "../../lib/domain-types";
+import type { DomainConfig } from "../../lib/domain-types"
 
 const config: DomainConfig = {
-  slug: "swisspost",
-  name: "Swiss Post Intelligence Harness",
-  tagline:
-    "One agent, three teams — a Swiss Post intelligence harness with a Neon + filesystem semantic layer, dual answer modes, and savable case briefings, service dashboards and editorial drafts.",
-
-  brand: {
-    primary: "#FFCC00", // Swiss Post yellow
-    accent: "#1F1F1F", // Swiss Post black
-    logo: "/domains/swisspost/logo-full.png",
-    favicon: "/domains/swisspost/icon.svg",
-    ogImage: "/domains/swisspost/logo-full.png",
-    fontFamily: "Frutiger, Inter, system-ui",
-  },
-
+  slug: "redbull",
+  name: "Red Bull Intelligence Harness",
+  tagline: "One field-sales agent, three focused workflows — route readiness, predictive in-store execution, and governed market playbooks.",
+  brand: { primary: "#DB0A40", accent: "#0B1E3D", logo: "", favicon: "", ogImage: "", fontFamily: "Geist, system-ui" },
   personas: [
     {
-      slug: "kundenservice",
-      label: "Kundenservice",
-      role: "Read-only Tracking, Tarife & Standorte",
-      tagline: "Read-only Tracking, Tarife & Standorte",
-      hint:
-        "Track shipments, look up tariffs and find service points — with charts and dashboards.",
-      systemPromptPath: "personas/kundenservice.md",
-      skills: ["build-rich-answers", "render-dashboard", "swisspost-comparison"],
-      writeTools: [],
-      defaultMode: "customer",
+      slug: "route-copilot", label: "Route & Huddle Copilot", role: "ASM daily route readiness", tagline: "Turn the morning huddle into an executable day.",
+      hint: "Prioritize stops, surface targets and turn market guidance into a concise route briefing.", systemPromptPath: "personas/route-copilot.md",
+      skills: ["route-prioritization", "huddle-synthesis", "pocket-guide"], writeTools: ["save_route_briefing", "save_huddle_digest"], defaultMode: "analyst",
       examplePrompts: [
-        {
-          label: "Sendungsstatus",
-          prompt:
-            "Zeig mir alle heute in Bearbeitung befindlichen Priority-Pakete nach Kanton mit einem Chart.",
-        },
-        {
-          label: "Filialen in Zürich",
-          prompt:
-            "Welche Poststellen in Zürich haben nach 18:00 geöffnet und bieten Bargeldbezug?",
-        },
-        {
-          label: "Tarife A-Post vs PostPac",
-          prompt:
-            "Vergleiche A-Post und PostPac Priority nach Preis, Laufzeit und Gewichtsstufe.",
-        },
-        {
-          label: "Aktive Störungen",
-          prompt:
-            "Wo gibt es aktuell Zustellstörungen und welche Regionen sind betroffen?",
-        },
+        { label: "Build today’s route", prompt: "Prepare today’s Zürich route. Rank every stop by execution opportunity, include the morning huddle priorities, and save the route briefing." },
+        { label: "Huddle digest", prompt: "Turn today’s market huddle into a concise on-route digest with targets, watch-outs, and talk tracks." },
+        { label: "Pocket Guide", prompt: "What does the Pocket Guide recommend when a priority SKU has low availability but enough facings?" },
       ],
     },
     {
-      slug: "filiale",
-      label: "Filiale / KAM",
-      role: "Case-Briefings, Watchlists & Geschäftskunden",
-      tagline: "Case-Briefings, Watchlists & Geschäftskunden",
-      hint:
-        "Analyse Geschäftskunden, erstelle Case-Briefings und Watchlists — mit speicherbaren Reports.",
-      systemPromptPath: "personas/filiale.md",
-      skills: [
-        "swisspost-account-briefing",
-        "swisspost-portfolio-scan",
-        "swisspost-comparison",
-        "watchlist",
-      ],
-      writeTools: ["save_report", "save_watchlist", "refresh_watchlist"],
-      defaultMode: "customer",
+      slug: "store-coach", label: "In-Store Predictive Coach", role: "Striker visit execution", tagline: "The next best action for this store, right now.",
+      hint: "Combine store history, assortment, planogram gaps and agreements into a ranked visit plan.", systemPromptPath: "personas/store-coach.md",
+      skills: ["store-diagnosis", "next-best-action", "agreement-check"], writeTools: ["generate_visit_plan", "complete_visit_assignment", "save_visit_summary"], defaultMode: "analyst",
       examplePrompts: [
-        {
-          label: "KAM Briefing",
-          prompt:
-            "Erstelle ein Account-Briefing für unseren Top-Kunden im Bereich E-Commerce mit Sendungsvolumen, Service-Mix und Risiken — dann speichern.",
-        },
-        {
-          label: "Volumen-Watchlist",
-          prompt:
-            "Erstelle eine Watchlist der 8 grössten Geschäftskunden nach Paket-Volumen im Q4-2026 und speichere sie.",
-        },
-        {
-          label: "Vertragsrisiken",
-          prompt:
-            "Welche Geschäftskunden haben in den letzten 90 Tagen einen Volumen-Rückgang > 20% gezeigt? Nach Region ranken.",
-        },
-        {
-          label: "SLA-Ausblick",
-          prompt:
-            "Welche Filialen liegen unter dem 95%-Zustell-SLA und was sind die Hauptursachen?",
-        },
+        { label: "Start store visit", prompt: "I’m starting the visit at Coop Zürich HB. Build a ranked action plan using current SKU performance, prior visit gaps, and key-account agreements, then save it." },
+        { label: "Fix availability", prompt: "Which priority SKU should I address first at Coop Zürich HB and why?" },
+        { label: "Close visit", prompt: "Complete the open visibility assignment and save a short visit summary with the remaining follow-ups." },
       ],
     },
     {
-      slug: "kommunikation",
-      label: "Kommunikation",
-      role: "Service-Seiten entwerfen & publizieren",
-      tagline: "Service-Seiten entwerfen & publizieren",
-      hint:
-        "Entwerfe post.ch Service-Seiten aus internen Quellen, mit Editorial-Review-Workflow bis Publish.",
-      systemPromptPath: "personas/kommunikation.md",
-      skills: [
-        "swisspost-service-page-drafter",
-        "swisspost-service-page-reviser",
-        "digest",
-        "build-rich-answers",
-      ],
-      writeTools: [
-        "create_article_draft",
-        "update_article_draft",
-        "publish_article",
-        "create_article_revision",
-        "set_headline",
-        "set_dek",
-        "revise_text",
-        "add_pull_quote",
-        "add_source",
-        "list_article_revisions",
-        "save_digest",
-      ],
-      defaultMode: "customer",
+      slug: "playbook-manager", label: "Market Playbook Manager", role: "Field Application Manager", tagline: "Design once, validate safely, roll out by market.",
+      hint: "Define targeting rules, preview assignments, check conflicts and publish governed playbooks.", systemPromptPath: "personas/playbook-manager.md",
+      skills: ["rule-authoring", "assignment-preview", "playbook-governance"], writeTools: ["save_market_playbook", "preview_playbook_assignments", "publish_market_playbook"], defaultMode: "analyst",
       examplePrompts: [
-        {
-          label: "Störungs-Update",
-          prompt:
-            "Entwirf eine post.ch Service-Meldung aus den aktuellen Störungs-Einträgen und lege einen Article-Draft für die Redaktion an.",
-        },
-        {
-          label: "Tarif-Änderung",
-          prompt:
-            "Erstelle einen Entwurf einer Kundeninformation zur nächsten Tariferhöhung basierend auf dem tariffs-Table und speichere ihn als Draft.",
-        },
-        {
-          label: "Feiertags-Fahrplan",
-          prompt:
-            "Kompiliere die Feiertags-Zustellfahrpläne für Ostern in eine kundenfreundliche Übersicht und speichere sie als Digest.",
-        },
-        {
-          label: "Review-Pipeline",
-          prompt:
-            "Welche Article-Drafts sind aktuell im Editorial-Review-Workflow?",
-        },
+        { label: "Create playbook", prompt: "Create a Swiss priority-SKU recovery playbook for stores below 90% availability or missing target facings. Preview assignments before saving." },
+        { label: "Validate coverage", prompt: "Preview which stores and SKUs the current recovery rule would target, grouped by retailer." },
+        { label: "Publish version", prompt: "Publish the reviewed Swiss priority-SKU recovery playbook version 2." },
       ],
     },
   ],
-
-  database: {
-    schemaDir: "schema",
-    seedDir: "seed",
-    semanticLayerDir: "semantic-layer",
-  },
-
-  agent: {
-    glossaryPath: "semantic-layer/glossary.yml",
-    answerStyle: {
-      voice:
-        "präziser, Schweiz-fluenter Analyst für Post CH-Teams; Deutsch als Standardsprache, Englisch wenn der Nutzer wechselt",
-      avoid: [
-        "erfundene Zahlen",
-        "Beratung ausserhalb des vorhandenen Datenmodells",
-      ],
-    },
-  },
-
-  docs: {
-    architecturePath: "docs/ARCHITECTURE.md",
-    demoPath: "docs/DEMO.md",
-    dataPath: "docs/DATA.md",
-  },
-};
-
-export default config;
+  database: { schemaDir: "schema", seedDir: "seed", semanticLayerDir: "semantic-layer" },
+  agent: { glossaryPath: "semantic-layer/glossary.yml", answerStyle: { voice: "concise, evidence-led Red Bull field-sales copilot; English by default", avoid: ["invented operational figures", "generic advice without store evidence", "publishing without explicit approval"] } },
+  docs: { architecturePath: "docs/ARCHITECTURE.md", demoPath: "docs/DEMO.md", dataPath: "docs/DATA.md" },
+}
+export default config

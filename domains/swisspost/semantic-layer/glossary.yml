@@ -1,106 +1,13 @@
-# Swiss Post glossary — bilingual (DE / EN) terms the agent must map to SQL.
-# The whole `semantic-layer/` is synced into the sandbox at
-# `/workspace/semantic-layer/` by `pnpm domain:semantic`. The model greps this
-# file first before writing SQL.
-
 terms:
-  # ------- entities & principals -----------------------------------------
-  - term: shipment
-    definition: A single parcel or letter in the shipments table.
-    synonyms: [Sendung, parcel, letter, Paket, Brief, tracking, Tracking-Nummer]
-
-  - term: service point
-    definition: Any Swiss Post physical location — Filiale, Agentur, My Post 24 locker, or Business Center.
-    synonyms: [Poststelle, Filiale, Agentur, branch, Standort, location, Packstation]
-
-  - term: customer
-    definition: A business (KMU/GK) or private (PK) principal that Swiss Post bills.
-    synonyms: [Kunde, Auftraggeber, account, Vertragspartner]
-
-  - term: tariff
-    definition: A row in the tariffs table — one weight band of one service (A-Post, B-Post, PostPac Priority/Economy, Assured).
-    synonyms: [Tarif, Preis, price, service, Produkt]
-
-  - term: disruption
-    definition: A row in service_disruptions — an active or resolved operational issue (weather, road closure, strike, IT incident, branch closure).
-    synonyms: [Störung, Beeinträchtigung, incident, Ausfall]
-
-  - term: service page
-    definition: A row in service_pages — the internal source that the Kommunikation persona drafts a post.ch article from. Analog of a wire story.
-    synonyms: [Redaktions-Input, source, briefing, Meldung]
-
-  # ------- customer segmentation -----------------------------------------
-  - term: PK
-    definition: Privatkunde — private individual customer.
-    synonyms: [Privatkunde, private customer, consumer]
-
-  - term: KMU
-    definition: Kleine und mittlere Unternehmen — small and medium businesses (customers.segment = 'kmu').
-    synonyms: [SME, small business]
-
-  - term: GK
-    definition: Grosskunde — enterprise customer with negotiated contract (customers.segment = 'gk').
-    synonyms: [Grosskunde, enterprise, key account]
-
-  - term: key account
-    definition: A customer with customers.is_key_account = true. Handled by a KAM (Key Account Manager).
-    synonyms: [Schlüsselkunde, KAM-Kunde]
-
-  # ------- services --------------------------------------------------------
-  - term: A-Post
-    definition: Priority letter mail, 1 working day transit target. tariffs.service = 'a_post'.
-    synonyms: [A-Mail, priority letter, Priority-Brief]
-
-  - term: B-Post
-    definition: Economy letter mail, 3 working day transit target. tariffs.service = 'b_post'.
-    synonyms: [B-Mail, economy letter, Economy-Brief]
-
-  - term: PostPac Priority
-    definition: Priority parcel service, 1 working day transit target. tariffs.service = 'postpac_priority'.
-    synonyms: [Priority parcel, Prio-Paket]
-
-  - term: PostPac Economy
-    definition: Economy parcel service, 3 working day transit target. tariffs.service = 'postpac_economy'.
-    synonyms: [Economy parcel, Economy-Paket]
-
-  - term: Assured
-    definition: Insured parcel with signature; tariffs.service = 'assured'.
-    synonyms: [Assured parcel, versichertes Paket]
-
-  # ------- KPIs & metrics --------------------------------------------------
-  - term: on-time rate
-    definition: Share of delivered shipments whose is_on_time = true, expressed 0-100.
-    synonyms: [Pünktlichkeit, SLA, Zustell-SLA, on time percentage, OTP]
-
-  - term: volume
-    definition: Number of shipments in a time window, or customers.monthly_volume_k for a customer average.
-    synonyms: [Sendungsvolumen, Menge, throughput, Menge Sendungen]
-
-  - term: churn risk score
-    definition: 0-100 score on customers.churn_risk_score — higher = more at risk.
-    synonyms: [Abwanderungsrisiko, at-risk score]
-
-  - term: transit days target
-    definition: The tariff's promised working days from lodgement to delivery (tariffs.transit_days_target).
-    synonyms: [Laufzeit, target transit, Zustellziel]
-
-  - term: relevance
-    definition: The editorial-scored 0-100 relevance on service_pages.relevance_pct — how newsworthy the page is for post.ch.
-    synonyms: [Relevanz, editorial score, Newswert]
-
-  # ------- geography -------------------------------------------------------
-  - term: canton
-    definition: Swiss canton two-letter code (ZH, BE, VD, GE, BS, TI, ...). Used on service_points.canton, shipments.destination_canton, service_disruptions.cantons.
-    synonyms: [Kanton]
-
-  - term: Romandie
-    definition: French-speaking Switzerland — cantons VD, GE, NE, JU, FR, VS.
-    synonyms: [Suisse romande, French-speaking Switzerland]
-
-  - term: Deutschschweiz
-    definition: German-speaking Switzerland — ZH, BE, LU, ZG, SO, AG, BS, BL, SG, GR (partly), ...
-    synonyms: [German-speaking Switzerland]
-
-  - term: Ticino
-    definition: Italian-speaking Switzerland — canton TI.
-    synonyms: [Tessin]
+  Striker: field sales representative executing store visits
+  ASM: Area Sales Manager responsible for route readiness and huddles
+  DSM: District Sales Manager setting market priorities
+  FAM: Field Application Manager governing playbooks
+  outlet: stores
+  priority SKU: products.priority = true
+  OSA: store_product_performance.on_shelf_availability_pct
+  facing gap: facings < target_facings
+  perfect store: store_visits.perfect_store_score >= 90
+  open task: visit_assignments.status = 'open'
+  playbook: versioned targeting rules in market_playbooks
+  agreement clause: active key_account_agreements row

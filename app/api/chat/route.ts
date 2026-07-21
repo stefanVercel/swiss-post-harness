@@ -8,7 +8,7 @@ export const maxDuration = 60
 export async function POST(req: Request) {
   const { messages, persona, locale } = await req.json()
 
-  const personaSlug = typeof persona === "string" ? persona : "kundenservice"
+  const personaSlug = typeof persona === "string" ? persona : "route-copilot"
   if (!getPersona(personaSlug)) {
     return new Response(JSON.stringify({ error: `Unknown persona: ${personaSlug}` }), {
       status: 400,

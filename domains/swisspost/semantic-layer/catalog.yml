@@ -1,130 +1,26 @@
-# Swiss Post semantic catalog (2026)
-# Start here to discover entities. Full field detail lives in entities/*.yml.
-
+domain: red_bull_field_sales
+notice: All records and figures are synthetic demo data.
 entities:
-  - name: service_points
-    grain: one row per physical Swiss Post location
-    table: public.service_points
-    description: |
-      Filialen, Agenturen, My Post 24 lockers and Business Centers across Switzerland
-      with opening hours, offered services, weekly foot traffic and SLA attainment.
-    sample_questions:
-      - Welche Filialen in Zürich haben nach 18:00 offen?
-      - Welche Standorte bieten Bargeldbezug?
-      - On-time-Rate der Filialen in der Romandie?
-    use_for:
-      - Standort-Suche, Öffnungszeiten, Services-Filter, SLA-Ranking.
-      - Joining shipments to their origin service point.
-    do_not_use_for:
-      - Sendungs-Status (siehe shipments).
-    join_hints:
-      - "shipments.origin_sp_id -> service_points.id"
-    dimensions: [id, name, kind, canton, city, postal_code, services, status]
-    measures: [weekly_visits_k, on_time_pct]
-
-  - name: shipments
-    grain: one row per parcel or letter (operational inventory)
-    table: public.shipments
-    description: |
-      All parcels and letters in the system with status, weight, tariff applied,
-      origin service point, destination canton/city, timestamps and delay reason.
-      The primary operational grain.
-    sample_questions:
-      - Wie viele Priority-Pakete sind heute in Zustellung?
-      - Sendungs-Status pro Kanton mit Verzögerungen?
-      - Welche Kunden haben die höchste On-Time-Rate?
-    use_for:
-      - Volumen-Analysen, SLA-Attainment, Delay-Ursachen.
-      - Joining to customers, tariffs, service_points.
-    do_not_use_for:
-      - Preistabellen (siehe tariffs).
-      - Kundenprofile (siehe customers).
-    join_hints:
-      - "shipments.customer_id -> customers.id"
-      - "shipments.tariff_id -> tariffs.id"
-      - "shipments.origin_sp_id -> service_points.id"
-    dimensions: [id, customer_id, tariff_id, origin_sp_id, destination_canton, destination_city, status, delayed_reason, service_label]
-    measures: [weight_g, is_on_time]
-
-  - name: customers
-    grain: one row per billed customer (PK / KMU / GK)
-    table: public.customers
-    description: |
-      Business (KMU/GK) and private (PK) customers with segment, industry,
-      average monthly shipment volume, annual revenue to Swiss Post, key-account
-      flag, contract status and churn risk score.
-    sample_questions:
-      - Welche GK-Kunden haben das grösste Volumen?
-      - Welche Grosskunden sind at_risk?
-      - Umsatz-Top-10 nach Branche?
-    use_for:
-      - Kundenprofile, Risiko-Ranking, Portfolio-Analysen.
-      - Joining to shipments.
-    do_not_use_for:
-      - Einzel-Sendungen (siehe shipments).
-    join_hints:
-      - "shipments.customer_id -> customers.id"
-    dimensions: [id, name, segment, industry, primary_canton, is_key_account, contract_status]
-    measures: [monthly_volume_k, annual_revenue_chf, churn_risk_score]
-
-  - name: tariffs
-    grain: one row per weight band of one service
-    table: public.tariffs
-    description: |
-      The service catalog — A-Post, B-Post, PostPac Priority/Economy, Assured —
-      broken out per weight band with price in CHF and target transit days.
-    sample_questions:
-      - Preis A-Post B5 vs B4?
-      - Vergleiche PostPac Priority und Economy in der 2kg-Klasse.
-      - Ab welchem Gewicht ist Assured günstiger als PostPac Priority?
-    use_for:
-      - Preisvergleich, Tarif-Erklärungen, Kundenberatung.
-    do_not_use_for:
-      - Wieviele Sendungen (siehe shipments).
-    join_hints:
-      - "shipments.tariff_id -> tariffs.id"
-    dimensions: [id, service, service_label, format, is_domestic]
-    measures: [weight_from_g, weight_to_g, price_chf, transit_days_target]
-
-  - name: service_disruptions
-    grain: one row per operational disruption event
-    table: public.service_disruptions
-    description: |
-      Weather, strike, road closure, IT incident and branch closure events with
-      affected cantons/postal codes, severity, expected duration and impacted services.
-    sample_questions:
-      - Welche aktiven Störungen betreffen den Kanton Bern?
-      - Wie viele Störungen wegen Wetter im Q3?
-      - Höchste Severity aktuell?
-    use_for:
-      - Aktive Störungsübersicht, Impact-Analyse, Ursachen-Statistik.
-      - Trigger für die Kommunikations-Persona (via service_pages).
-    do_not_use_for:
-      - Kundenkommunikation-Draft (siehe service_pages).
-    join_hints:
-      - "service_pages.related_disruption_id -> service_disruptions.id"
-    dimensions: [id, cause, cantons, severity, status, affected_services]
-    measures: [started_at, expected_end]
-
-  - name: service_pages
-    grain: one row per source item for a post.ch service page
-    table: public.service_pages
-    description: |
-      Editorial source items feeding the post.ch Kommunikations-Workflow —
-      tariffs updates, disruption bulletins, how-tos, holiday schedules,
-      product launches and policy notes with editorial priority and relevance.
-      The trigger feed the article-drafter skill drafts from.
-    sample_questions:
-      - Welche High-Priority Service-Pages sind noch nicht publiziert?
-      - Ranking nach relevance_pct für Störungs-Meldungen?
-      - Welche Drafts stecken im Review?
-    use_for:
-      - Redaktions-Backlog, Draft-Pipeline, Publish-Status.
-      - Trigger für article-drafter / article-reviser.
-    do_not_use_for:
-      - Bereits publizierte Artikel-Metriken (out of scope).
-    join_hints:
-      - "service_pages.related_disruption_id -> service_disruptions.id"
-      - "service_pages.related_tariff_id -> tariffs.id"
-    dimensions: [id, category, headline, source, status, priority]
-    measures: [relevance_pct, published_at]
+  markets: market configuration
+  retail_accounts: retailer and channel hierarchy
+  stores: outlet profile and priority
+  products: SKU master and priority flag
+  store_product_performance: weekly store-SKU execution grain
+  key_account_agreements: active retailer commitments
+  routes: daily owner route
+  route_stops: ordered outlets and objectives
+  store_visits: visit history and perfect-store score
+  visit_assignments: executable tasks and completion
+  huddle_briefings: dated market priorities
+  pocket_guide_entries: approved execution knowledge
+  market_playbooks: governed targeting rules and versions
+joins:
+  - stores.account_id = retail_accounts.id
+  - retail_accounts.market_id = markets.id
+  - store_product_performance.store_id = stores.id
+  - store_product_performance.product_id = products.id
+  - key_account_agreements.account_id = retail_accounts.id
+  - route_stops.route_id = routes.id
+  - route_stops.store_id = stores.id
+  - store_visits.store_id = stores.id
+  - visit_assignments.store_id = stores.id

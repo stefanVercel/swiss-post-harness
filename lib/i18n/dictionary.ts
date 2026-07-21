@@ -77,9 +77,9 @@ export const UI: Record<Locale, Dict> = {
     write: "write",
     read: "read",
     savedArtifacts: "Saved artifacts",
-    artifactsHint: "Populated by write tools (reports, watchlists, drafts).",
+    artifactsHint: "Populated by field-sales tools (briefings, visit plans, playbooks).",
     artifactsEmpty:
-      "No artifacts yet. Let a write-capable persona (Filiale / Kommunikation) save something.",
+      "No artifacts yet. Ask a field-sales persona to save a briefing, plan, or playbook.",
     articleDrafts: "Article drafts",
     reports: "Reports",
     watchlists: "Watchlists",
@@ -126,9 +126,9 @@ export const UI: Record<Locale, Dict> = {
     write: "write",
     read: "read",
     savedArtifacts: "Gespeicherte Artefakte",
-    artifactsHint: "Wird durch Write-Tools befüllt (Reports, Watchlists, Drafts).",
+    artifactsHint: "Wird durch Field-Sales-Tools befüllt (Briefings, Besuchspläne, Playbooks).",
     artifactsEmpty:
-      "Noch keine Artefakte. Bitte einen Write-fähigen Persona (Filiale / Kommunikation) etwas speichern lassen.",
+      "Noch keine Artefakte. Bitte ein Briefing, einen Besuchsplan oder ein Playbook speichern lassen.",
     articleDrafts: "Article-Drafts",
     reports: "Reports",
     watchlists: "Watchlists",
