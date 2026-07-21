@@ -1,6 +1,6 @@
--- Artifact persistence for the Swiss Post harness (reports, editorial, watchlists, digests).
--- Mirrors the P7S1 schema but rebinds source_rumor_id / rumor_id to service_pages,
--- which is the Swiss Post equivalent of the wire_stories source table.
+-- Legacy artifact persistence retained for compatibility with existing demos.
+-- New Red Bull field-sales writes use route briefings, visit plans, summaries,
+-- and governed market playbooks from 003_field_sales_artifacts.sql.
 
 create table if not exists public.reports (
   id uuid primary key default gen_random_uuid(),

@@ -2,7 +2,7 @@
  * Minimal `DomainConfig` contract for the intelligence harness.
  *
  * The original domain pack imports this type from the (not-included) harness
- * runtime. We reproduce the shape the Swiss Post `domain.config.ts` actually
+ * runtime. We reproduce the shape the Red Bull field-sales `domain.config.ts` actually
  * uses so the pack drops in unmodified except for the import path.
  */
 export type PersonaMode = "customer" | "analyst" | string

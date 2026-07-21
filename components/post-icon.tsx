@@ -1,9 +1,9 @@
 import type { CSSProperties } from "react"
 
 /**
- * Swiss Post Design System icon.
+ * Shared product-interface icon wrapper.
  *
- * The `@swisspost/design-system-icons` package ships each icon as a
+ * The installed icon package ships each icon as a
  * self-contained SVG (with responsive size symbols). We serve the ones we use
  * from `/public/post-icons` and render them via a CSS mask so the glyph is
  * tinted with `currentColor` — this keeps a single monochrome icon legible on

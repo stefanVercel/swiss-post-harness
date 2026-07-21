@@ -1,6 +1,6 @@
 /**
  * i18n core config — a single source of truth for the three supported locales.
- * English is the default; German and French are the other Swiss Post languages.
+ * English is the default; German and French are supported field-market languages.
  */
 
 export const LOCALES = ["en", "de", "fr"] as const

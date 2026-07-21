@@ -5,8 +5,8 @@ import { pick, type Locale, type Localized } from "@/lib/i18n/config"
  * Harness registry — the single source of truth for the "one harness, many
  * agents" showcase on /harness (the primitives grid + the interactive run).
  *
- * Everything here is grounded in the real Swiss Post agent surface:
- *   - personas  → domains/swisspost/domain.config.ts (Kundenservice / Filiale / Kommunikation)
+ * Everything here is grounded in the real Red Bull agent surface:
+ *   - personas  → domains/swisspost/domain.config.ts (Route Copilot / Store Coach / Playbook Manager)
  *   - skills    → agent/skills/*  +  the generic harness skills folded into prompts
  *   - tools     → lib/tools.ts    (read tools shared by all; write tools per persona)
  *   - semantic  → domains/swisspost/semantic-layer/**
@@ -157,7 +157,7 @@ const RAW_SKILLS: Record<string, RawBlock> = {
     name: "compare-store-execution",
     blurb: {
       en: "Compare tariffs, branches or customers — price, transit time, volume, head-to-head.",
-      de: "Vergleich von Tarifen, Filialen oder Kunden — Preis, Laufzeit, Volumen, Head-to-Head.",
+      de: "Vergleich von Stores, SKUs oder Märkten — Verfügbarkeit, Absatz, Execution und Head-to-Head.",
       fr: "Comparer tarifs, store-coachs ou clients — prix, délai, volume, face à face.",
     },
   },
@@ -196,9 +196,9 @@ const RAW_SKILLS: Record<string, RawBlock> = {
     kind: "skill",
     name: "author-market-playbook",
     blurb: {
-      en: "Drafts post.ch service pages from service_pages / service_disruptions for review.",
-      de: "Entwirft post.ch Service-Seiten aus service_pages / service_disruptions für das Review.",
-      fr: "Rédige des pages de service post.ch depuis service_pages / service_disruptions pour relecture.",
+      en: "Drafts the market workspace service pages from service_pages / service_disruptions for review.",
+      de: "Entwirft the market workspace Service-Seiten aus service_pages / service_disruptions für das Review.",
+      fr: "Rédige des pages de service the market workspace depuis service_pages / service_disruptions pour relecture.",
     },
   },
   "review-playbook-impact": {
@@ -229,9 +229,9 @@ const RAW_TOOLS: Record<string, RawBlock> = {
     kind: "tool",
     name: "query_database",
     blurb: {
-      en: "A single read-only SELECT against the Swiss Post Postgres (Neon).",
-      de: "Ein einzelnes read-only SELECT gegen die Swiss Post Postgres (Neon).",
-      fr: "Un seul SELECT en lecture seule sur la base Postgres Swiss Post (Neon).",
+      en: "A single read-only SELECT against the Red Bull Postgres (Neon).",
+      de: "Ein einzelnes read-only SELECT gegen die Red Bull Postgres (Neon).",
+      fr: "Un seul SELECT en lecture seule sur la base Postgres Red Bull (Neon).",
     },
     source: "authored",
   },
@@ -772,7 +772,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         event: "turn.started",
         note: {
           en: "Customer Service asks in the web chat. A durable session and a turn begin.",
-          de: "Kundenservice fragt im Web-Chat. Eine durable Session und ein Turn beginnen.",
+          de: "Der Route Copilot startet im Web-Chat. Eine durable Session und ein Turn beginnen.",
           fr: "Le service clientèle pose sa question dans le chat web. Une session durable et un tour démarrent.",
         },
         infra: "fluid-compute",
@@ -1021,8 +1021,8 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
           actor: "user",
           text: {
             en: "Create a Swiss market playbook that assigns recovery actions when a priority SKU drops below 90% OSA, then preview the impact.",
-            de: "Entwirf eine post.ch Service-Meldung aus den aktuellen Störungen und leg einen Draft für die Redaktion an.",
-            fr: "Rédige un avis de service post.ch depuis les perturbations actuelles et crée un brouillon pour la rédaction.",
+            de: "Entwirf eine the market workspace Service-Meldung aus den aktuellen Störungen und leg einen Draft für die Redaktion an.",
+            fr: "Rédige un avis de service the market workspace depuis les perturbations actuelles et crée un brouillon pour la rédaction.",
           },
         },
       },
@@ -1092,18 +1092,18 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         lane: "tool",
         event: "resumeHook · publish_playbook",
         note: {
-          en: "On resume, the workflow publishes the service page to post.ch.",
-          de: "Beim Resume publiziert der Workflow die Service-Seite auf post.ch.",
-          fr: "À la reprise, le workflow publie la page de service sur post.ch.",
+          en: "On resume, the workflow publishes the service page to the market workspace.",
+          de: "Beim Resume publiziert der Workflow die Service-Seite auf the market workspace.",
+          fr: "À la reprise, le workflow publie la page de service sur the market workspace.",
         },
         infra: "connect",
         uses: ["publish_playbook"],
         say: {
           actor: "system",
           text: {
-            en: "Published to post.ch.",
-            de: "Auf post.ch publiziert.",
-            fr: "Publié sur post.ch.",
+            en: "Published to the market workspace.",
+            de: "Auf the market workspace publiziert.",
+            fr: "Publié sur the market workspace.",
           },
           emphasis: true,
         },

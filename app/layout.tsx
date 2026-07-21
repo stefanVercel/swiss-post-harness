@@ -14,7 +14,7 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 export const metadata: Metadata = {
   title: 'Red Bull Intelligence Harness',
   description:
-    'One agent, three teams — an action-ready intelligence harness with a Neon + filesystem semantic layer, savable case briefings, service dashboards and editorial drafts.',
+    'A production-grade Red Bull field-sales agent for route prioritization, predictive store coaching, and governed market playbooks, powered by Vercel AI SDK and Neon.',
   generator: 'v0.app',
   icons: {
     icon: [
