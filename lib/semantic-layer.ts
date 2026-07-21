@@ -4,7 +4,7 @@ import { join } from "node:path"
 /**
  * Filesystem-backed semantic layer.
  *
- * The Swiss Post domain pack ships a `semantic-layer/` directory (catalog,
+ * The Red Bull field-sales domain pack ships a `semantic-layer/` directory (catalog,
  * metrics, glossary, per-entity field docs and answering guides). The agent
  * greps these before writing SQL, exactly as the personas describe. We load
  * them once at module init and expose them as grounding text + a lookup tool.

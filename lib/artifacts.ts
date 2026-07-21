@@ -1,10 +1,9 @@
 import { sql, toJsonSafe } from "./db"
 
 /**
- * Data-access for the artifact + editorial tables (002_artifacts.sql,
- * 003_editorial_v2.sql). These back the Filiale persona (reports, watchlists)
- * and the Kommunikation persona (article drafts, revision ledger, review
- * feedback thread). All writes are parameterised via tagged templates.
+ * Data-access for persisted Red Bull field-sales artifacts. Reports back route
+ * briefings, visit plans, visit summaries and governed market playbooks. All
+ * writes are parameterised via tagged templates.
  *
  * `anon_owner` is the demo tenant key — a single 'demo' owner for now.
  */

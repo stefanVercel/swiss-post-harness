@@ -14,9 +14,9 @@ import type { PersonasResponse } from "@/lib/ui-types"
 const fetcher = (url: string) => fetch(url).then((r) => r.json())
 
 const PERSONA_ICON: Record<string, PostIconName> = {
-  kundenservice: "customercontact",
-  filiale: "branch",
-  kommunikation: "newspaper",
+  "route-copilot": "parcel",
+  "store-coach": "branch",
+  "playbook-manager": "newspaper",
 }
 
 export function HarnessShell() {
@@ -39,11 +39,11 @@ export function HarnessShell() {
   return (
     <div className="flex h-dvh flex-col bg-background">
       {/* Brand bar */}
-      <header className="flex items-center gap-4 border-b border-sidebar-border bg-sidebar px-4 py-3 text-sidebar-foreground md:px-6">
+      <header className="flex items-center gap-2 border-b border-sidebar-border bg-sidebar px-3 py-3 text-sidebar-foreground sm:gap-4 sm:px-4 md:px-6">
         <img
           src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Red_Bull_idCMb-1Vvp_1-Z16AvVNSA8y6E7kqOqnILqJTNzvwXi.svg"
           alt="Red Bull"
-          className="h-8 w-auto shrink-0 object-contain sm:h-9"
+          className="h-7 w-auto shrink-0 object-contain sm:h-9"
         />
         <div className="hidden min-w-0 border-l border-sidebar-border pl-4 sm:block">
           <h1 className="font-heading text-sm font-extrabold leading-tight text-sidebar-foreground md:text-base">
