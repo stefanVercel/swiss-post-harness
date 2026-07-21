@@ -1,5 +1,5 @@
 /**
- * One-shot DB setup for the Swiss Post domain pack.
+ * One-shot DB setup for the Red Bull field-sales domain pack.
  *
  *   node scripts/db-setup.mjs
  *

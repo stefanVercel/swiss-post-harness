@@ -1,0 +1,14 @@
+entity: store_product_performance
+grain: one row per store, product, and week_start
+primary_key: [store_id, product_id, week_start]
+fields:
+  units_sold: weekly units
+  sales_trend_pct: percentage trend versus comparison period
+  on_shelf_availability_pct: OSA from 0 to 100
+  facings: observed shelf facings
+  target_facings: required execution target
+  planogram_compliant: observed compliance flag
+joins:
+  - stores on store_id = stores.id
+  - products on product_id = products.id
+query_guidance: Use the latest week_start per store and product. Never aggregate across historical weeks without stating the period.

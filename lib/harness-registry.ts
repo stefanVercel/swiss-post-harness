@@ -5,8 +5,8 @@ import { pick, type Locale, type Localized } from "@/lib/i18n/config"
  * Harness registry — the single source of truth for the "one harness, many
  * agents" showcase on /harness (the primitives grid + the interactive run).
  *
- * Everything here is grounded in the real Swiss Post agent surface:
- *   - personas  → domains/swisspost/domain.config.ts (Kundenservice / Filiale / Kommunikation)
+ * Everything here is grounded in the real Red Bull agent surface:
+ *   - personas  → domains/swisspost/domain.config.ts (Route Copilot / Store Coach / Playbook Manager)
  *   - skills    → agent/skills/*  +  the generic harness skills folded into prompts
  *   - tools     → lib/tools.ts    (read tools shared by all; write tools per persona)
  *   - semantic  → domains/swisspost/semantic-layer/**
@@ -53,55 +53,55 @@ export interface PersonaMeta {
 const RAW_PERSONA_META: Record<PersonaId, RawPersonaMeta> = {
   "route-copilot": {
     id: "route-copilot",
-    name: { en: "Customer Service", de: "Kundenservice", fr: "Service clientèle" },
+    name: { en: "Route & Huddle Copilot", de: "Route & Huddle Copilot", fr: "Route & Huddle Copilot" },
     surface: {
-      en: "Chat · tracking, tariffs & locations",
-      de: "Chat · Tracking, Tarife & Standorte",
-      fr: "Chat · suivi, tarifs et emplacements",
+      en: "Morning huddle · route priorities",
+      de: "Morning Huddle · Routenprioritäten",
+      fr: "Morning huddle · priorités de tournée",
     },
-    channel: { en: "Web (Eve channel)", de: "Web (Eve channel)", fr: "Web (canal Eve)" },
+    channel: { en: "Web + mobile field view", de: "Web + Mobile Field View", fr: "Web + vue mobile terrain" },
     tagline: {
-      en: "Track shipments, tariffs and service points — with charts and dashboards.",
-      de: "Sendungen verfolgen, Tarife und Poststellen — mit Charts und Dashboards.",
-      fr: "Suivre les envois, tarifs et points de service — avec graphiques et tableaux de bord.",
+      en: "Turn market signals into a focused route brief and store-by-store priorities.",
+      de: "Marktsignale in ein fokussiertes Routenbriefing und Store-Prioritäten übersetzen.",
+      fr: "Transformer les signaux marché en briefing de tournée et priorités par magasin.",
     },
-    icon: "customercontact",
-    accent: { color: "var(--sp-ink)", soft: "var(--sp-ink-soft)", on: "#ffffff" },
+    icon: "parcel",
+    accent: { color: "var(--sp-red)", soft: "var(--sp-red-soft)", on: "#ffffff" },
   },
   "store-coach": {
     id: "store-coach",
-    name: { en: "Branch / KAM", de: "Filiale / KAM", fr: "Filiale / KAM" },
+    name: { en: "In-Store Predictive Coach", de: "In-Store Predictive Coach", fr: "In-Store Predictive Coach" },
     surface: {
-      en: "Chat · case briefings & watchlists",
-      de: "Chat · Case-Briefings & Watchlists",
-      fr: "Chat · dossiers et watchlists",
+      en: "Store visit · next best actions",
+      de: "Store Visit · Next Best Actions",
+      fr: "Visite magasin · meilleures actions",
     },
-    channel: { en: "Web (Eve channel)", de: "Web (Eve channel)", fr: "Web (canal Eve)" },
+    channel: { en: "Mobile field assistant", de: "Mobiler Field Assistant", fr: "Assistant mobile terrain" },
     tagline: {
-      en: "Analyse business customers, save case briefings and watchlists.",
-      de: "Geschäftskunden analysieren, Case-Briefings und Watchlists speichern.",
-      fr: "Analyser les clients commerciaux, enregistrer dossiers et watchlists.",
+      en: "Diagnose availability and visibility gaps, then create an evidence-based visit plan.",
+      de: "Availability- und Visibility-Gaps diagnostizieren und einen evidenzbasierten Besuchsplan erstellen.",
+      fr: "Diagnostiquer les écarts de disponibilité et visibilité, puis créer un plan de visite factuel.",
     },
     icon: "branch",
     accent: { color: "var(--sp-blue)", soft: "var(--sp-blue-soft)", on: "#ffffff" },
   },
   "playbook-manager": {
     id: "playbook-manager",
-    name: { en: "Communications", de: "Kommunikation", fr: "Communication" },
+    name: { en: "Market Playbook Manager", de: "Market Playbook Manager", fr: "Market Playbook Manager" },
     surface: {
-      en: "Editorial desk · draft & publish",
-      de: "Editorial-Desk · Entwerfen & Publizieren",
-      fr: "Bureau éditorial · rédiger et publier",
+      en: "Market workspace · govern & publish",
+      de: "Market Workspace · Steuern & Publizieren",
+      fr: "Workspace marché · gouverner et publier",
     },
     channel: {
-      en: "Web (Eve channel) + editorial workflow",
-      de: "Web (Eve channel) + Editorial-Workflow",
-      fr: "Web (canal Eve) + workflow éditorial",
+      en: "Web + governed approval workflow",
+      de: "Web + kontrollierter Approval-Workflow",
+      fr: "Web + workflow d'approbation gouverné",
     },
     tagline: {
-      en: "Draft service pages from internal sources, review, publish.",
-      de: "Service-Seiten aus internen Quellen entwerfen, reviewen, publizieren.",
-      fr: "Rédiger des pages de service depuis des sources internes, relire, publier.",
+      en: "Convert market strategy into transparent assignment rules, preview impact, approve and publish.",
+      de: "Marktstrategie in transparente Assignment-Regeln übersetzen, Wirkung prüfen, freigeben und publizieren.",
+      fr: "Convertir la stratégie marché en règles transparentes, prévisualiser, approuver et publier.",
     },
     icon: "newspaper",
     accent: { color: "var(--sp-yellow)", soft: "var(--sp-yellow-soft)", on: "var(--sp-ink)" },
@@ -141,70 +141,70 @@ const RAW_SKILLS: Record<string, RawBlock> = {
       fr: "Graphiques, tableaux, cartes et payloads finalize_answer pour chaque réponse analytique.",
     },
   },
-  "render-dashboard": {
-    id: "render-dashboard",
+  "prioritize-route": {
+    id: "prioritize-route",
     kind: "skill",
-    name: "render-dashboard",
+    name: "prioritize-route",
     blurb: {
       en: "Post dashboards: rankings, disruption boards, volume curves by canton.",
       de: "Post-Dashboards: Ranglisten, Störungs-Boards, Volumen-Kurven nach Kanton.",
       fr: "Tableaux de bord Post : classements, tableaux de perturbations, courbes de volume par canton.",
     },
   },
-  "swisspost-comparison": {
-    id: "swisspost-comparison",
+  "compare-store-execution": {
+    id: "compare-store-execution",
     kind: "skill",
-    name: "swisspost-comparison",
+    name: "compare-store-execution",
     blurb: {
       en: "Compare tariffs, branches or customers — price, transit time, volume, head-to-head.",
-      de: "Vergleich von Tarifen, Filialen oder Kunden — Preis, Laufzeit, Volumen, Head-to-Head.",
+      de: "Vergleich von Stores, SKUs oder Märkten — Verfügbarkeit, Absatz, Execution und Head-to-Head.",
       fr: "Comparer tarifs, store-coachs ou clients — prix, délai, volume, face à face.",
     },
   },
-  "swisspost-account-briefing": {
-    id: "swisspost-account-briefing",
+  "diagnose-store-execution": {
+    id: "diagnose-store-execution",
     kind: "skill",
-    name: "swisspost-account-briefing",
+    name: "diagnose-store-execution",
     blurb: {
       en: "Deep account briefing per business customer — volume, service mix, SLA, risks.",
       de: "Tiefes Account-Briefing je Geschäftskunde — Volumen, Service-Mix, SLA, Risiken.",
       fr: "Dossier de compte approfondi par client commercial — volume, mix de services, SLA, risques.",
     },
   },
-  "swisspost-portfolio-scan": {
-    id: "swisspost-portfolio-scan",
+  "recommend-next-best-actions": {
+    id: "recommend-next-best-actions",
     kind: "skill",
-    name: "swisspost-portfolio-scan",
+    name: "recommend-next-best-actions",
     blurb: {
       en: "Portfolio scan across regions/customers — volume movers, contract risks, outliers.",
       de: "Portfolio-Scan über Regionen/Kunden — Volumen-Mover, Vertragsrisiken, Ausreisser.",
       fr: "Scan de portefeuille par régions/clients — variations de volume, risques contractuels, valeurs aberrantes.",
     },
   },
-  watchlist: {
-    id: "watchlist",
+  "visit-planning": {
+    id: "visit-planning",
     kind: "skill",
-    name: "watchlist",
+    name: "visit-planning",
     blurb: {
-      en: "Build and save customer/branch watchlists, with refresh-and-diff over time.",
+      en: "Build and save customer/branch visit-plannings, with refresh-and-diff over time.",
       de: "Kunden-/Filial-Watchlists bauen und speichern, mit Refresh-und-Diff über die Zeit.",
-      fr: "Créer et enregistrer des watchlists clients/store-coachs, avec rafraîchissement et diff dans le temps.",
+      fr: "Créer et enregistrer des visit-plannings clients/store-coachs, avec rafraîchissement et diff dans le temps.",
     },
   },
-  "swisspost-service-page-drafter": {
-    id: "swisspost-service-page-drafter",
+  "author-market-playbook": {
+    id: "author-market-playbook",
     kind: "skill",
-    name: "swisspost-service-page-drafter",
+    name: "author-market-playbook",
     blurb: {
-      en: "Drafts post.ch service pages from service_pages / service_disruptions for review.",
-      de: "Entwirft post.ch Service-Seiten aus service_pages / service_disruptions für das Review.",
-      fr: "Rédige des pages de service post.ch depuis service_pages / service_disruptions pour relecture.",
+      en: "Drafts the market workspace service pages from service_pages / service_disruptions for review.",
+      de: "Entwirft the market workspace Service-Seiten aus service_pages / service_disruptions für das Review.",
+      fr: "Rédige des pages de service the market workspace depuis service_pages / service_disruptions pour relecture.",
     },
   },
-  "swisspost-service-page-reviser": {
-    id: "swisspost-service-page-reviser",
+  "review-playbook-impact": {
+    id: "review-playbook-impact",
     kind: "skill",
-    name: "swisspost-service-page-reviser",
+    name: "review-playbook-impact",
     blurb: {
       en: "Granular draft revisions — headline, dek, paragraphs, pull quotes, sources.",
       de: "Granulare Draft-Revisionen — Headline, Dek, Absätze, Pull-Quotes, Quellen.",
@@ -229,9 +229,9 @@ const RAW_TOOLS: Record<string, RawBlock> = {
     kind: "tool",
     name: "query_database",
     blurb: {
-      en: "A single read-only SELECT against the Swiss Post Postgres (Neon).",
-      de: "Ein einzelnes read-only SELECT gegen die Swiss Post Postgres (Neon).",
-      fr: "Un seul SELECT en lecture seule sur la base Postgres Swiss Post (Neon).",
+      en: "A single read-only SELECT against the Red Bull Postgres (Neon).",
+      de: "Ein einzelnes read-only SELECT gegen die Red Bull Postgres (Neon).",
+      fr: "Un seul SELECT en lecture seule sur la base Postgres Red Bull (Neon).",
     },
     source: "authored",
   },
@@ -279,80 +279,69 @@ const RAW_TOOLS: Record<string, RawBlock> = {
     },
     source: "authored",
   },
-  save_report: {
-    id: "save_report",
+  save_route_brief: {
+    id: "save_route_brief",
     kind: "tool",
-    name: "save_report",
+    name: "save_route_brief",
     blurb: {
-      en: "Persists a structured case briefing (customer / branch / region).",
-      de: "Persistiert ein strukturiertes Case-Briefing (Kunde / Filiale / Region).",
-      fr: "Persiste un dossier structuré (client / store-coach / région).",
+      en: "Saves a route briefing with huddle priorities and store objectives.",
+      de: "Speichert ein Routenbriefing mit Huddle-Prioritäten und Store-Zielen.",
+      fr: "Enregistre un briefing de tournée avec priorités et objectifs magasin.",
     },
     source: "authored",
   },
-  save_watchlist: {
-    id: "save_watchlist",
+  create_visit_plan: {
+    id: "create_visit_plan",
     kind: "tool",
-    name: "save_watchlist",
+    name: "create_visit_plan",
     blurb: {
-      en: "Persists a named watchlist with a metric snapshot for later refresh.",
-      de: "Persistiert eine benannte Watchlist mit Metrik-Snapshot für späteren Refresh.",
-      fr: "Persiste une watchlist nommée avec un instantané de métriques pour rafraîchissement ultérieur.",
+      en: "Creates evidence-based assignments for a planned store visit.",
+      de: "Erstellt evidenzbasierte Assignments für einen geplanten Store Visit.",
+      fr: "Crée des missions factuelles pour une visite magasin planifiée.",
     },
     source: "authored",
   },
-  refresh_watchlist: {
-    id: "refresh_watchlist",
+  complete_assignment: {
+    id: "complete_assignment",
     kind: "tool",
-    name: "refresh_watchlist",
+    name: "complete_assignment",
     blurb: {
-      en: "Re-queries a saved watchlist and writes the new snapshot.",
-      de: "Re-queryt eine gespeicherte Watchlist und schreibt den neuen Snapshot.",
-      fr: "Réinterroge une watchlist enregistrée et écrit le nouvel instantané.",
+      en: "Completes a visit assignment and records field evidence.",
+      de: "Schliesst ein Visit Assignment ab und erfasst Field Evidence.",
+      fr: "Termine une mission de visite et enregistre les preuves terrain.",
     },
     source: "authored",
   },
-  create_article_draft: {
-    id: "create_article_draft",
+  save_visit_summary: {
+    id: "save_visit_summary",
     kind: "tool",
-    name: "create_article_draft",
+    name: "save_visit_summary",
     blurb: {
-      en: "Creates a service page draft (revision 1, status in_review).",
-      de: "Legt einen Service-Seiten-Draft an (Revision 1, Status in_review).",
-      fr: "Crée un brouillon de page de service (révision 1, statut in_review).",
+      en: "Persists the visit outcome, Perfect Store score and follow-ups.",
+      de: "Speichert Visit Outcome, Perfect Store Score und Follow-ups.",
+      fr: "Enregistre le résultat, le score Perfect Store et les suivis.",
     },
     source: "authored",
   },
-  update_article_draft: {
-    id: "update_article_draft",
+  preview_playbook: {
+    id: "preview_playbook",
     kind: "tool",
-    name: "update_article_draft",
+    name: "preview_playbook",
     blurb: {
-      en: "Replaces the draft payload with a new revision.",
-      de: "Ersetzt das Draft-Payload durch eine neue Revision.",
-      fr: "Remplace le payload du brouillon par une nouvelle révision.",
+      en: "Previews which stores and assignments a proposed rule set would create.",
+      de: "Zeigt vorab, welche Stores und Assignments ein Regelwerk erzeugen würde.",
+      fr: "Prévisualise les magasins et missions générés par les règles proposées.",
     },
     source: "authored",
   },
-  publish_article: {
-    id: "publish_article",
+  publish_playbook: {
+    id: "publish_playbook",
     kind: "tool",
-    name: "publish_article",
+    name: "publish_playbook",
     blurb: {
-      en: "Publishes a reviewed draft — only after explicit editor approval.",
-      de: "Publiziert einen reviewten Draft — nur nach explizitem Editor-Approval.",
-      fr: "Publie un brouillon relu — uniquement après approbation explicite de l'éditeur.",
-    },
-    source: "authored",
-  },
-  save_digest: {
-    id: "save_digest",
-    kind: "tool",
-    name: "save_digest",
-    blurb: {
-      en: "Bundles several service pages into one saved digest.",
-      de: "Bündelt mehrere Service-Seiten zu einem gespeicherten Digest.",
-      fr: "Regroupe plusieurs pages de service en un digest enregistré.",
+      en: "Publishes an approved market playbook with a versioned audit trail.",
+      de: "Publiziert ein freigegebenes Market Playbook mit versioniertem Audit Trail.",
+      fr: "Publie un playbook marché approuvé avec piste d'audit versionnée.",
     },
     source: "authored",
   },
@@ -393,53 +382,65 @@ const RAW_SEMANTIC: Record<string, RawBlock> = {
     "Kanonische KPI-Definitionen mit sql_hints (Volumen, SLA, Laufzeit).",
     "Définitions canoniques des KPI avec sql_hints (volume, SLA, délai).",
   ),
-  "entities/shipments.yml": sem(
-    "entities/shipments.yml",
-    "Shipments — status, product, canton, transit time.",
-    "Sendungen — Status, Produkt, Kanton, Laufzeit.",
-    "Envois — statut, produit, canton, délai.",
+  "entities/stores.yml": sem(
+    "entities/stores.yml",
+    "Stores — account, format, location and priority score.",
+    "Stores — Account, Format, Standort und Priority Score.",
+    "Magasins — compte, format, emplacement et score de priorité.",
   ),
-  "entities/customers.yml": sem(
-    "entities/customers.yml",
-    "Business customers — segment, volume, contract, region.",
-    "Geschäftskunden — Segment, Volumen, Vertrag, Region.",
-    "Clients commerciaux — segment, volume, contrat, région.",
+  "entities/products.yml": sem(
+    "entities/products.yml",
+    "Products — category, pack size and priority status.",
+    "Produkte — Kategorie, Packungsgrösse und Prioritätsstatus.",
+    "Produits — catégorie, format et statut prioritaire.",
   ),
-  "entities/tariffs.yml": sem(
-    "entities/tariffs.yml",
-    "Tariffs — product, price, weight tier, transit time.",
-    "Tarife — Produkt, Preis, Gewichtsstufe, Laufzeit.",
-    "Tarifs — produit, prix, palier de poids, délai.",
+  "entities/store_product_performance.yml": sem(
+    "entities/store_product_performance.yml",
+    "Weekly sales, OSA, facings and planogram compliance by store and SKU.",
+    "Wöchentliche Sales, OSA, Facings und Planogram Compliance je Store und SKU.",
+    "Ventes, OSA, facings et conformité planogramme par magasin et SKU.",
   ),
-  "entities/service_points.yml": sem(
-    "entities/service_points.yml",
-    "Service points — opening hours, services, location.",
-    "Poststellen — Öffnungszeiten, Services, Standort.",
-    "Points de service — horaires, services, emplacement.",
+  "entities/key_account_agreements.yml": sem(
+    "entities/key_account_agreements.yml",
+    "Active account clauses and minimum visibility commitments.",
+    "Aktive Account-Klauseln und Mindest-Visibility-Commitments.",
+    "Clauses actives et engagements minimum de visibilité.",
   ),
-  "entities/service_disruptions.yml": sem(
-    "entities/service_disruptions.yml",
-    "Disruptions — region, impact, window, status.",
-    "Störungen — Region, Impact, Zeitraum, Status.",
-    "Perturbations — région, impact, période, statut.",
+  "entities/routes.yml": sem(
+    "entities/routes.yml",
+    "Daily routes, ordered stops and store objectives.",
+    "Tagesrouten, geordnete Stopps und Store-Ziele.",
+    "Tournées quotidiennes, arrêts ordonnés et objectifs magasin.",
   ),
-  "entities/service_pages.yml": sem(
-    "entities/service_pages.yml",
-    "Service page sources for editorial drafts.",
-    "Service-Seiten-Quellen für redaktionelle Drafts.",
-    "Sources de pages de service pour les brouillons éditoriaux.",
+  "entities/store_visits.yml": sem(
+    "entities/store_visits.yml",
+    "Visit status, Perfect Store score, assignments and evidence.",
+    "Visit-Status, Perfect Store Score, Assignments und Evidence.",
+    "Statut de visite, score Perfect Store, missions et preuves.",
   ),
-  "guides/delivery-operations.md": sem(
-    "guides/delivery-operations.md",
-    "How to read delivery SLA, volume and disruptions.",
-    "Wie man Zustell-SLA, Volumen und Störungen liest.",
-    "Comment lire le SLA de distribution, le volume et les perturbations.",
+  "entities/market_playbooks.yml": sem(
+    "entities/market_playbooks.yml",
+    "Versioned assignment rules and publication state by market.",
+    "Versionierte Assignment-Regeln und Publikationsstatus je Markt.",
+    "Règles de mission versionnées et statut de publication par marché.",
   ),
-  "guides/service-catalog.md": sem(
-    "guides/service-catalog.md",
-    "Product and tariff catalog — comparison logic.",
-    "Produkt- und Tarifkatalog — Vergleichslogik.",
-    "Catalogue produits et tarifs — logique de comparaison.",
+  "guides/route-huddle.md": sem(
+    "guides/route-huddle.md",
+    "How to prioritize a route and prepare the morning huddle.",
+    "Wie eine Route priorisiert und das Morning Huddle vorbereitet wird.",
+    "Comment prioriser une tournée et préparer le morning huddle.",
+  ),
+  "guides/in-store-coaching.md": sem(
+    "guides/in-store-coaching.md",
+    "How to diagnose availability and visibility gaps in store.",
+    "Wie Availability- und Visibility-Gaps im Store diagnostiziert werden.",
+    "Comment diagnostiquer les écarts de disponibilité et visibilité.",
+  ),
+  "guides/playbook-authoring.md": sem(
+    "guides/playbook-authoring.md",
+    "How to author, preview, approve and publish market rules.",
+    "Wie Marktregeln erstellt, geprüft, freigegeben und publiziert werden.",
+    "Comment rédiger, prévisualiser, approuver et publier les règles marché.",
   ),
 }
 
@@ -660,20 +661,20 @@ export interface PersonaComposition {
 
 export const PERSONA_BLOCKS: Record<PersonaId, PersonaComposition> = {
   "route-copilot": {
-    skills: ["build-rich-answers", "render-dashboard", "swisspost-comparison"],
-    tools: [...SHARED_TOOLS],
+    skills: ["build-rich-answers", "prioritize-route", "compare-store-execution"],
+    tools: [...SHARED_TOOLS, "save_route_brief"],
     semantic: ALL_SEMANTIC,
     infra: ALL_INFRA,
   },
   "store-coach": {
-    skills: ["swisspost-account-briefing", "swisspost-portfolio-scan", "swisspost-comparison", "watchlist"],
-    tools: [...SHARED_TOOLS, "save_report", "save_watchlist", "refresh_watchlist"],
+    skills: ["diagnose-store-execution", "recommend-next-best-actions", "compare-store-execution", "visit-planning"],
+    tools: [...SHARED_TOOLS, "create_visit_plan", "complete_assignment", "save_visit_summary"],
     semantic: ALL_SEMANTIC,
     infra: ALL_INFRA,
   },
   "playbook-manager": {
-    skills: ["swisspost-service-page-drafter", "swisspost-service-page-reviser", "digest", "build-rich-answers"],
-    tools: [...SHARED_TOOLS, "create_article_draft", "update_article_draft", "publish_article", "save_digest"],
+    skills: ["author-market-playbook", "review-playbook-impact", "digest", "build-rich-answers"],
+    tools: [...SHARED_TOOLS, "preview_playbook", "publish_playbook"],
     semantic: ALL_SEMANTIC,
     infra: ALL_INFRA,
   },
@@ -756,12 +757,12 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
   "route-copilot": {
     personaId: "route-copilot",
     request: {
-      en: "Priority parcels in processing by canton — with a chart.",
+      en: "Build today’s Zürich route brief — rank stores by execution risk and show the priorities.",
       de: "Priority-Pakete in Bearbeitung nach Kanton — mit Chart.",
       fr: "Colis Priority en traitement par canton — avec un graphique.",
     },
     outcome: {
-      en: "A rich, shareable dashboard — chart + ranking — streamed into the chat.",
+      en: "A focused route briefing — ranked stops, execution risks and huddle priorities — streamed into the field view.",
       de: "Ein reiches, teilbares Dashboard — Chart + Rangliste — in den Chat gestreamt.",
       fr: "Un tableau de bord riche et partageable — graphique + classement — diffusé dans le chat.",
     },
@@ -771,14 +772,14 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         event: "turn.started",
         note: {
           en: "Customer Service asks in the web chat. A durable session and a turn begin.",
-          de: "Kundenservice fragt im Web-Chat. Eine durable Session und ein Turn beginnen.",
+          de: "Der Route Copilot startet im Web-Chat. Eine durable Session und ein Turn beginnen.",
           fr: "Le service clientèle pose sa question dans le chat web. Une session durable et un tour démarrent.",
         },
         infra: "fluid-compute",
         say: {
           actor: "user",
           text: {
-            en: "Show all Priority parcels in processing today by canton, with a chart.",
+            en: "Build today’s Zürich route brief. Rank my stops by execution risk and show the top store priorities.",
             de: "Zeig alle heute in Bearbeitung befindlichen Priority-Pakete nach Kanton mit Chart.",
             fr: "Affiche tous les colis Priority en traitement aujourd'hui par canton, avec un graphique.",
           },
@@ -793,7 +794,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
           fr: "Démarre la sandbox, monte la couche sémantique, charge les skills de tableau de bord.",
         },
         infra: "sandbox",
-        uses: ["render-dashboard", "build-rich-answers", "load_skill", "catalog.yml"],
+        uses: ["prioritize-route", "build-rich-answers", "load_skill", "catalog.yml"],
       },
       {
         lane: "model",
@@ -806,11 +807,11 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         infra: "ai-gateway",
         cmd: "grep -ril 'canton' semantic-layer/",
         stdout: {
-          en: "entities/shipments.yml, metrics.yml",
-          de: "entities/shipments.yml, metrics.yml",
-          fr: "entities/shipments.yml, metrics.yml",
+          en: "entities/routes.yml, metrics.yml",
+          de: "entities/routes.yml, metrics.yml",
+          fr: "entities/routes.yml, metrics.yml",
         },
-        uses: ["bash", "read_semantic_doc", "SCHEMA.md", "entities/shipments.yml"],
+        uses: ["bash", "read_semantic_doc", "SCHEMA.md", "entities/routes.yml"],
       },
       {
         lane: "tool",
@@ -820,7 +821,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
           de: "Führt eine read-only SQL-Query für die Kanton-Rangliste aus.",
           fr: "Exécute une requête SQL en lecture seule pour le classement par canton.",
         },
-        cmd: "select canton, count(*) from shipments where product='priority' and status='in_processing' group by 1 order by 2 desc",
+        cmd: "select s.name, s.priority_score, min(sp.on_shelf_availability_pct) as osa from route_stops rs join stores s on s.id=rs.store_id join store_product_performance sp on sp.store_id=s.id where rs.route_id=$1 group by 1,2 order by 2 desc",
         stdout: { en: "26 cantons", de: "26 Kantone", fr: "26 cantons" },
         uses: ["query_database"],
         say: {
@@ -869,12 +870,12 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
   "store-coach": {
     personaId: "store-coach",
     request: {
-      en: "Account briefing for a top e-commerce customer — then save it.",
+      en: "Coach my Coop Zürich HB visit — diagnose the gaps and create the visit plan.",
       de: "Account-Briefing für einen Top-E-Commerce-Kunden — dann speichern.",
       fr: "Dossier de compte pour un grand client e-commerce — puis l'enregistrer.",
     },
     outcome: {
-      en: "A saved report artifact in the library — volume, service mix, SLA, risks.",
+      en: "A saved visit plan — OSA gaps, facing gaps, account clauses and next best actions.",
       de: "Ein gespeichertes Report-Artefakt in der Library — Volumen, Service-Mix, SLA, Risiken.",
       fr: "Un artefact de rapport enregistré dans la bibliothèque — volume, mix de services, SLA, risques.",
     },
@@ -883,7 +884,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         lane: "channel",
         event: "turn.started",
         note: {
-          en: "A KAM asks for a full account briefing. The turn begins.",
+          en: "A field sales rep opens the next store visit. The coaching turn begins.",
           de: "Ein KAM fragt nach einem vollen Account-Briefing. Der Turn beginnt.",
           fr: "Un KAM demande un dossier de compte complet. Le tour démarre.",
         },
@@ -891,7 +892,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         say: {
           actor: "user",
           text: {
-            en: "Account briefing for our top e-commerce customer — with volume, service mix, risks — then save it.",
+            en: "Coach my Coop Zürich HB visit — show OSA and facing gaps, active agreements and the next best actions — then create the visit plan.",
             de: "Account-Briefing für unseren Top-E-Commerce-Kunden — mit Volumen, Service-Mix, Risiken — dann speichern.",
             fr: "Dossier de compte pour notre grand client e-commerce — avec volume, mix de services, risques — puis l'enregistrer.",
           },
@@ -906,7 +907,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
           fr: "Démarre la sandbox et charge les skills de dossier + portefeuille.",
         },
         infra: "sandbox",
-        uses: ["swisspost-account-briefing", "swisspost-portfolio-scan", "load_skill"],
+        uses: ["diagnose-store-execution", "recommend-next-best-actions", "load_skill"],
       },
       {
         lane: "model",
@@ -917,13 +918,13 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
           fr: "Lit le guide client, puis le profil du client et des volumes.",
         },
         infra: "ai-gateway",
-        cmd: "cat semantic-layer/entities/customers.yml",
+        cmd: "cat semantic-layer/entities/store_product_performance.yml",
         stdout: {
           en: "segment, volume, contract, sla",
           de: "segment, volume, contract, sla",
           fr: "segment, volume, contract, sla",
         },
-        uses: ["read_semantic_doc", "guides/delivery-operations.md", "entities/customers.yml"],
+        uses: ["read_semantic_doc", "guides/delivery-operations.md", "entities/store_product_performance.yml"],
       },
       {
         lane: "tool",
@@ -933,7 +934,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
           de: "Liest Sendungsvolumen, Service-Mix und SLA des Kunden.",
           fr: "Lit le volume d'envois, le mix de services et le SLA du client.",
         },
-        cmd: "select month, parcels, letters, sla_pct from customer_volume where customer_id = $1 order by 1",
+        cmd: "select p.name, sp.on_shelf_availability_pct, sp.facings, sp.target_facings from store_product_performance sp join products p on p.id=sp.product_id where sp.store_id=$1 order by sp.on_shelf_availability_pct",
         stdout: {
           en: "12 months · service mix aggregated",
           de: "12 Monate · Service-Mix aggregiert",
@@ -959,18 +960,18 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         },
         infra: "workflow",
         pause: true,
-        uses: ["save_report"],
+        uses: ["create_visit_plan"],
       },
       {
         lane: "tool",
-        event: "save_report",
+        event: "create_visit_plan",
         note: {
           en: "The turn resumes and persists the briefing to the library.",
           de: "Der Turn resumt und persistiert das Briefing in die Library.",
           fr: "Le tour reprend et persiste le dossier dans la bibliothèque.",
         },
         infra: "connect",
-        uses: ["save_report"],
+        uses: ["create_visit_plan"],
         produces: "report",
         say: {
           actor: "system",
@@ -997,12 +998,12 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
   "playbook-manager": {
     personaId: "playbook-manager",
     request: {
-      en: "Draft a service notice from current disruptions and run it through review.",
+      en: "Create a Swiss priority-SKU recovery playbook, preview its impact and publish it after approval.",
       de: "Service-Meldung aus aktuellen Störungen entwerfen und durch das Review führen.",
       fr: "Rédiger un avis de service depuis les perturbations actuelles et le passer en relecture.",
     },
     outcome: {
-      en: "A draft created (in_review), revised on request, then published — one durable workflow.",
+      en: "A versioned market playbook — impact previewed, approved and published through one durable workflow.",
       de: "Ein Draft angelegt (in_review), auf Wunsch überarbeitet, dann publiziert — ein durable Workflow.",
       fr: "Un brouillon créé (in_review), révisé sur demande, puis publié — un seul workflow durable.",
     },
@@ -1019,9 +1020,9 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         say: {
           actor: "user",
           text: {
-            en: "Draft a post.ch service notice from the current disruptions and create a draft for the editorial team.",
-            de: "Entwirf eine post.ch Service-Meldung aus den aktuellen Störungen und leg einen Draft für die Redaktion an.",
-            fr: "Rédige un avis de service post.ch depuis les perturbations actuelles et crée un brouillon pour la rédaction.",
+            en: "Create a Swiss market playbook that assigns recovery actions when a priority SKU drops below 90% OSA, then preview the impact.",
+            de: "Entwirf eine the market workspace Service-Meldung aus den aktuellen Störungen und leg einen Draft für die Redaktion an.",
+            fr: "Rédige un avis de service the market workspace depuis les perturbations actuelles et crée un brouillon pour la rédaction.",
           },
         },
       },
@@ -1034,18 +1035,18 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
           fr: "Charge les skills de rédaction + digest ; lit les lignes de perturbation.",
         },
         infra: "sandbox",
-        uses: ["swisspost-service-page-drafter", "digest", "entities/service_disruptions.yml"],
+        uses: ["author-market-playbook", "digest", "entities/market_playbooks.yml"],
       },
       {
         lane: "tool",
-        event: "create_article_draft",
+        event: "preview_playbook",
         note: {
           en: "Drafts the service page from DB events; status becomes in_review.",
           de: "Entwirft die Service-Seite aus DB-Events; Status wird in_review.",
           fr: "Rédige la page de service depuis les événements de la base ; le statut devient in_review.",
         },
         infra: "workflow",
-        uses: ["create_article_draft"],
+        uses: ["preview_playbook"],
         produces: "draft",
         say: {
           actor: "agent",
@@ -1066,7 +1067,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
         },
         infra: "workflow",
         pause: true,
-        uses: ["update_article_draft"],
+        uses: ["preview_playbook"],
       },
       {
         lane: "tool",
@@ -1077,7 +1078,7 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
           fr: "À la reprise, le workflow révise le brouillon et repasse par la relecture.",
         },
         infra: "workflow",
-        uses: ["update_article_draft"],
+        uses: ["preview_playbook"],
         say: {
           actor: "system",
           text: {
@@ -1089,20 +1090,20 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
       },
       {
         lane: "tool",
-        event: "resumeHook · publish_article",
+        event: "resumeHook · publish_playbook",
         note: {
-          en: "On resume, the workflow publishes the service page to post.ch.",
-          de: "Beim Resume publiziert der Workflow die Service-Seite auf post.ch.",
-          fr: "À la reprise, le workflow publie la page de service sur post.ch.",
+          en: "On resume, the workflow publishes the service page to the market workspace.",
+          de: "Beim Resume publiziert der Workflow die Service-Seite auf the market workspace.",
+          fr: "À la reprise, le workflow publie la page de service sur the market workspace.",
         },
         infra: "connect",
-        uses: ["publish_article"],
+        uses: ["publish_playbook"],
         say: {
           actor: "system",
           text: {
-            en: "Published to post.ch.",
-            de: "Auf post.ch publiziert.",
-            fr: "Publié sur post.ch.",
+            en: "Published to the market workspace.",
+            de: "Auf the market workspace publiziert.",
+            fr: "Publié sur the market workspace.",
           },
           emphasis: true,
         },

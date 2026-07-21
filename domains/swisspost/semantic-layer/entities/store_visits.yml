@@ -1,0 +1,11 @@
+entity: store_visits
+grain: one planned or completed store visit
+primary_key: id
+fields:
+  store_id: visited outlet
+  route_id: optional route containing the visit
+  visited_at: completion timestamp
+  status: planned or completed
+  perfect_store_score: 0-100 execution score
+  notes: observed visit findings
+query_guidance: For prior findings, filter status = 'completed' and order by visited_at DESC.

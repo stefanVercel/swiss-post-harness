@@ -1,0 +1,11 @@
+entity: key_account_agreements
+grain: one contractual execution clause
+primary_key: id
+fields:
+  account_id: joins retail_accounts.id
+  product_id: optional SKU governed by the clause
+  required_facings: minimum contracted facings
+  valid_from: clause start date
+  valid_to: clause end date
+  status: active or inactive
+query_guidance: Treat a clause as active only when status = 'active' and CURRENT_DATE is between valid_from and valid_to.

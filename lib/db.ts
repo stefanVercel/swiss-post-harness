@@ -1,7 +1,7 @@
 import { neon, type NeonQueryFunction } from "@neondatabase/serverless"
 
 /**
- * Single shared read/write Neon client for the Swiss Post harness.
+ * Single shared read/write Neon client for the Red Bull Intelligence Harness.
  *
  * The `query_database` agent tool only ever passes SELECT statements through
  * `runReadOnlyQuery` (guarded below). The editorial / report write tools use

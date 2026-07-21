@@ -1,0 +1,13 @@
+entity: routes
+related_entity: route_stops
+grain: one daily field-sales route; route_stops is one ordered store on that route
+fields:
+  routes.route_date: selling date
+  routes.owner_name: route owner
+  route_stops.stop_order: visit sequence
+  route_stops.planned_at: planned local time
+  route_stops.objective: pre-visit objective
+joins:
+  - route_stops.route_id = routes.id
+  - route_stops.store_id = stores.id
+query_guidance: Resolve the route by date, market, and owner; rank execution opportunity separately from stop_order.

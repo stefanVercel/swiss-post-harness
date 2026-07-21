@@ -1,0 +1,13 @@
+entity: visit_assignments
+grain: one executable field task
+primary_key: id
+fields:
+  visit_id: optional planned visit
+  store_id: target outlet
+  product_id: optional target SKU
+  title: observable action
+  rationale: evidence for the action
+  priority: high, medium, or low
+  status: open or completed
+  due_at: expected completion timestamp
+query_guidance: Open work is status = 'open'. Join products for SKU names and store_visits for visit context.

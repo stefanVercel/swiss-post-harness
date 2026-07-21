@@ -4,7 +4,7 @@ import { join } from "node:path"
 /**
  * Filesystem-backed semantic layer.
  *
- * The Swiss Post domain pack ships a `semantic-layer/` directory (catalog,
+ * The Red Bull field-sales domain pack ships a `semantic-layer/` directory (catalog,
  * metrics, glossary, per-entity field docs and answering guides). The agent
  * greps these before writing SQL, exactly as the personas describe. We load
  * them once at module init and expose them as grounding text + a lookup tool.
@@ -81,7 +81,11 @@ export function buildGroundingContext(): string {
     "## glossary.yml (map user terms -> columns)",
     s.glossary,
     "",
-    "## Retrievable detail docs (use the read_semantic_doc tool):",
+    "## Exact entity schemas",
+    "Use only columns documented below. Never invent or rename a column. If a query fails, inspect the relevant entity document and correct the query once rather than guessing repeatedly.",
+    ...Object.entries(s.entities).map(([name, body]) => `### ${name}\n${body}`),
+    "",
+    "## Retrievable workflow guides (use the read_semantic_doc tool):",
     `- entities: ${entityNames}`,
     `- guides: ${guideNames}`,
   ].join("\n")

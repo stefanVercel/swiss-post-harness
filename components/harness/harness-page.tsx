@@ -34,7 +34,7 @@ export function HarnessPage() {
             <span className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
               <PostIcon name="parcel" size={20} />
             </span>
-            <span className="font-heading text-sm font-extrabold tracking-tight">Swiss Post Intelligence</span>
+            <span className="font-heading text-sm font-extrabold tracking-tight">Red Bull Intelligence</span>
           </Link>
           <nav className="flex items-center gap-1.5">
             <a
