@@ -39,21 +39,23 @@ export function HarnessShell() {
   return (
     <div className="flex h-dvh flex-col bg-background">
       {/* Brand bar */}
-      <header className="flex items-center gap-3 border-b border-border bg-card px-4 py-3 md:px-6">
-        <div className="flex h-8 w-8 items-center justify-center rounded bg-primary text-primary-foreground">
-          <PostIcon name="parcel" size={20} />
-        </div>
-        <div className="min-w-0">
-          <h1 className="font-heading text-sm font-bold leading-tight text-foreground md:text-base">
-            {data.domain.name}
+      <header className="flex items-center gap-4 border-b border-sidebar-border bg-sidebar px-4 py-3 text-sidebar-foreground md:px-6">
+        <img
+          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Red_Bull_idCMb-1Vvp_1-Z16AvVNSA8y6E7kqOqnILqJTNzvwXi.svg"
+          alt="Red Bull"
+          className="h-8 w-auto shrink-0 object-contain sm:h-9"
+        />
+        <div className="hidden min-w-0 border-l border-sidebar-border pl-4 sm:block">
+          <h1 className="font-heading text-sm font-extrabold leading-tight text-sidebar-foreground md:text-base">
+            Intelligence Harness
           </h1>
-          <p className="hidden truncate text-xs text-muted-foreground sm:block">{t.semanticLayerLabel}</p>
+          <p className="truncate text-xs text-sidebar-foreground/60">{t.semanticLayerLabel}</p>
         </div>
         <div className="ml-auto flex shrink-0 items-center gap-2">
-          <LocaleSwitcher variant="light" />
+          <LocaleSwitcher variant="onInk" />
           <Link
             href="/harness"
-            className="flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:border-primary hover:bg-accent"
+            className="flex items-center gap-2 rounded-full border border-sidebar-border bg-sidebar-accent px-4 py-2 text-sm font-bold text-sidebar-foreground transition-colors hover:border-primary hover:bg-primary"
           >
             <PostIcon name="network" size={16} />
             <span className="hidden sm:inline">{t.viewHarness}</span>
@@ -75,7 +77,7 @@ export function HarnessShell() {
                 key={p.slug}
                 type="button"
                 onClick={() => setActiveSlug(p.slug)}
-                className={`shrink-0 rounded-lg px-3 py-2 text-left transition-colors md:w-full ${
+                className={`shrink-0 rounded-xl px-3 py-2.5 text-left transition-colors md:w-full ${
                   isActive
                     ? "bg-primary text-primary-foreground"
                     : "text-sidebar-foreground hover:bg-sidebar-accent"
@@ -94,7 +96,7 @@ export function HarnessShell() {
                 </div>
                 <div className="mt-1.5 hidden md:flex">
                   <span
-                    className={`rounded px-1.5 py-0.5 text-[10px] font-medium ${
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                       isActive
                         ? "bg-primary-foreground/20 text-primary-foreground"
                         : p.writeTools.length

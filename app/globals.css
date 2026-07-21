@@ -49,54 +49,53 @@
 
 :root {
   color-scheme: light;
-  /* Swiss Post: yellow (#FFCC00) primary, near-black ink, warm-neutral greys */
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.17 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.17 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.17 0 0);
-  --primary: oklch(0.86 0.17 95);
-  --primary-foreground: oklch(0.17 0 0);
-  --secondary: oklch(0.96 0 0);
-  --secondary-foreground: oklch(0.2 0 0);
-  --muted: oklch(0.96 0 0);
-  --muted-foreground: oklch(0.5 0 0);
-  --accent: oklch(0.94 0.03 95);
-  --accent-foreground: oklch(0.2 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9 0 0);
-  --input: oklch(0.9 0 0);
-  --ring: oklch(0.86 0.17 95);
-  --chart-1: oklch(0.86 0.17 95);
-  --chart-2: oklch(0.55 0.02 250);
-  --chart-3: oklch(0.7 0.13 55);
-  --chart-4: oklch(0.6 0.1 160);
-  --chart-5: oklch(0.35 0 0);
-  --radius: 0.5rem;
-  --sidebar: oklch(0.17 0 0);
-  --sidebar-foreground: oklch(0.97 0 0);
-  --sidebar-primary: oklch(0.86 0.17 95);
-  --sidebar-primary-foreground: oklch(0.17 0 0);
-  --sidebar-accent: oklch(0.26 0 0);
-  --sidebar-accent-foreground: oklch(0.97 0 0);
-  --sidebar-border: oklch(0.3 0 0);
-  --sidebar-ring: oklch(0.86 0.17 95);
+  /* Red Bull: action red, deep navy, energy yellow, and clean neutral surfaces. */
+  --background: #f6f7f9;
+  --foreground: #0b1e3d;
+  --card: #ffffff;
+  --card-foreground: #0b1e3d;
+  --popover: #ffffff;
+  --popover-foreground: #0b1e3d;
+  --primary: #db0a40;
+  --primary-foreground: #ffffff;
+  --secondary: #edf0f4;
+  --secondary-foreground: #0b1e3d;
+  --muted: #edf0f4;
+  --muted-foreground: #5d6778;
+  --accent: #ffcc00;
+  --accent-foreground: #0b1e3d;
+  --destructive: #c40033;
+  --border: #d8dde5;
+  --input: #d8dde5;
+  --ring: #db0a40;
+  --chart-1: #db0a40;
+  --chart-2: #0b1e3d;
+  --chart-3: #ffcc00;
+  --chart-4: #5d6778;
+  --chart-5: #c40033;
+  --radius: 0.75rem;
+  --sidebar: #0b1e3d;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #db0a40;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #263856;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #344560;
+  --sidebar-ring: #ffcc00;
 
-  /* Harness showcase accents (/harness) — Swiss Post yellow + ink, with a
-     muted blue and green for persona/lane differentiation in the diagrams. */
+  /* Legacy semantic aliases retained for the harness diagrams. */
   --sp-yellow: #ffcc00;
-  --sp-yellow-soft: #fff6d6;
-  --sp-ink: #1f1f1f;
-  --sp-ink-soft: #ededed;
-  --sp-blue: #2f6fb0;
-  --sp-blue-soft: #e7eff8;
-  --sp-green: #1c7d1c;
-  --sp-green-soft: #e9f4e9;
-  --sp-amber: #b5730f;
-  --sp-amber-soft: #fbf3e6;
-  --sp-red: #c8102e;
-  --sp-red-soft: #fdecec;
+  --sp-yellow-soft: #fff6cc;
+  --sp-ink: #0b1e3d;
+  --sp-ink-soft: #edf0f4;
+  --sp-blue: #0b1e3d;
+  --sp-blue-soft: #e7ebf1;
+  --sp-green: #557a46;
+  --sp-green-soft: #edf3ea;
+  --sp-amber: #9a7100;
+  --sp-amber-soft: #fff6cc;
+  --sp-red: #db0a40;
+  --sp-red-soft: #fde7ed;
 }
 
 .dark {

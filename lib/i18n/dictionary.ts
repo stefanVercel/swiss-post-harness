@@ -87,8 +87,8 @@ export const UI: Record<Locale, Dict> = {
     harnessRunNav: "Harness run",
     technologyNav: "The technology",
     toChat: "To the chat",
-    homeAria: "To the Swiss Post Intelligence home",
-    heroEyebrow: "Swiss Post · the intelligence harness",
+    homeAria: "To the Red Bull Intelligence home",
+    heroEyebrow: "Red Bull · the intelligence harness",
     heroTitlePre: "One harness, ",
     heroTitleKey: "many agents",
     heroLead:
@@ -103,9 +103,9 @@ export const UI: Record<Locale, Dict> = {
     closingLead:
       "Your data modelled once as a semantic layer, your expertise as reusable skills, every agent on the same managed infrastructure. The next agent is one composition away.",
     closingCta: "Open the research agent",
-    metaTitle: "One harness, many agents · Swiss Post Intelligence",
+    metaTitle: "One harness, many agents · Red Bull Intelligence",
     metaDescription:
-      "Watch the Swiss Post harness at work: the Vercel AI primitives under every turn and an interactive run that lights up the shared anatomy live.",
+      "Watch the Red Bull harness at work: the Vercel AI primitives under every turn and an interactive run that lights up the shared anatomy live.",
   },
   de: {
     loading: "Lade Harness…",
@@ -136,8 +136,8 @@ export const UI: Record<Locale, Dict> = {
     harnessRunNav: "Harness-Run",
     technologyNav: "Die Technologie",
     toChat: "Zum Chat",
-    homeAria: "Zur Swiss Post Intelligence Startseite",
-    heroEyebrow: "Swiss Post · der Intelligence-Harness",
+    homeAria: "Zur Red Bull Intelligence Startseite",
+    heroEyebrow: "Red Bull · der Intelligence-Harness",
     heroTitlePre: "Ein Harness, ",
     heroTitleKey: "viele Agenten",
     heroLead:
@@ -152,9 +152,9 @@ export const UI: Record<Locale, Dict> = {
     closingLead:
       "Eure Daten einmal als Semantic Layer modelliert, eure Fachexpertise als wiederverwendbare Skills, jeder Agent auf derselben gemanagten Infrastruktur. Der nächste Agent ist eine Komposition entfernt.",
     closingCta: "Den Research-Agenten öffnen",
-    metaTitle: "Ein Harness, viele Agenten · Swiss Post Intelligence",
+    metaTitle: "Ein Harness, viele Agenten · Red Bull Intelligence",
     metaDescription:
-      "Sieh dem Swiss Post Harness bei der Arbeit zu: die Vercel-AI-Primitives unter jedem Turn und ein interaktiver Run, der die geteilte Anatomie live erhellt.",
+      "Sieh dem Red Bull Harness bei der Arbeit zu: die Vercel-AI-Primitives unter jedem Turn und ein interaktiver Run, der die geteilte Anatomie live erhellt.",
   },
   fr: {
     loading: "Chargement du harness…",
@@ -185,8 +185,8 @@ export const UI: Record<Locale, Dict> = {
     harnessRunNav: "Exécution du harness",
     technologyNav: "La technologie",
     toChat: "Vers le chat",
-    homeAria: "Vers l'accueil Swiss Post Intelligence",
-    heroEyebrow: "Swiss Post · le harness d'intelligence",
+    homeAria: "Vers l'accueil Red Bull Intelligence",
+    heroEyebrow: "Red Bull · le harness d'intelligence",
     heroTitlePre: "Un harness, ",
     heroTitleKey: "plusieurs agents",
     heroLead:
@@ -201,8 +201,8 @@ export const UI: Record<Locale, Dict> = {
     closingLead:
       "Vos données modélisées une fois en couche sémantique, votre expertise en skills réutilisables, chaque agent sur la même infrastructure gérée. Le prochain agent n'est qu'à une composition.",
     closingCta: "Ouvrir l'agent de recherche",
-    metaTitle: "Un harness, plusieurs agents · Swiss Post Intelligence",
+    metaTitle: "Un harness, plusieurs agents · Red Bull Intelligence",
     metaDescription:
-      "Regardez le harness Swiss Post à l'œuvre : les primitives IA de Vercel sous chaque tour et une exécution interactive qui illumine l'anatomie partagée en direct.",
+      "Regardez le harness Red Bull à l'œuvre : les primitives IA de Vercel sous chaque tour et une exécution interactive qui illumine l'anatomie partagée en direct.",
   },
 }
