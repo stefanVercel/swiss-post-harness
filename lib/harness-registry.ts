@@ -20,9 +20,9 @@ import { pick, type Locale, type Localized } from "@/lib/i18n/config"
 
 type T = Localized<string>
 
-export type PersonaId = "kundenservice" | "filiale" | "kommunikation"
+export type PersonaId = "route-copilot" | "store-coach" | "playbook-manager"
 
-export const PERSONA_ORDER: PersonaId[] = ["kundenservice", "filiale", "kommunikation"]
+export const PERSONA_ORDER: PersonaId[] = ["route-copilot", "store-coach", "playbook-manager"]
 
 /* -------------------------------------------------------------------------- */
 /* Personas                                                                    */
@@ -51,8 +51,8 @@ export interface PersonaMeta {
 }
 
 const RAW_PERSONA_META: Record<PersonaId, RawPersonaMeta> = {
-  kundenservice: {
-    id: "kundenservice",
+  "route-copilot": {
+    id: "route-copilot",
     name: { en: "Customer Service", de: "Kundenservice", fr: "Service clientèle" },
     surface: {
       en: "Chat · tracking, tariffs & locations",
@@ -68,8 +68,8 @@ const RAW_PERSONA_META: Record<PersonaId, RawPersonaMeta> = {
     icon: "customercontact",
     accent: { color: "var(--sp-ink)", soft: "var(--sp-ink-soft)", on: "#ffffff" },
   },
-  filiale: {
-    id: "filiale",
+  "store-coach": {
+    id: "store-coach",
     name: { en: "Branch / KAM", de: "Filiale / KAM", fr: "Filiale / KAM" },
     surface: {
       en: "Chat · case briefings & watchlists",
@@ -85,8 +85,8 @@ const RAW_PERSONA_META: Record<PersonaId, RawPersonaMeta> = {
     icon: "branch",
     accent: { color: "var(--sp-blue)", soft: "var(--sp-blue-soft)", on: "#ffffff" },
   },
-  kommunikation: {
-    id: "kommunikation",
+  "playbook-manager": {
+    id: "playbook-manager",
     name: { en: "Communications", de: "Kommunikation", fr: "Communication" },
     surface: {
       en: "Editorial desk · draft & publish",
@@ -158,7 +158,7 @@ const RAW_SKILLS: Record<string, RawBlock> = {
     blurb: {
       en: "Compare tariffs, branches or customers — price, transit time, volume, head-to-head.",
       de: "Vergleich von Tarifen, Filialen oder Kunden — Preis, Laufzeit, Volumen, Head-to-Head.",
-      fr: "Comparer tarifs, filiales ou clients — prix, délai, volume, face à face.",
+      fr: "Comparer tarifs, store-coachs ou clients — prix, délai, volume, face à face.",
     },
   },
   "swisspost-account-briefing": {
@@ -188,7 +188,7 @@ const RAW_SKILLS: Record<string, RawBlock> = {
     blurb: {
       en: "Build and save customer/branch watchlists, with refresh-and-diff over time.",
       de: "Kunden-/Filial-Watchlists bauen und speichern, mit Refresh-und-Diff über die Zeit.",
-      fr: "Créer et enregistrer des watchlists clients/filiales, avec rafraîchissement et diff dans le temps.",
+      fr: "Créer et enregistrer des watchlists clients/store-coachs, avec rafraîchissement et diff dans le temps.",
     },
   },
   "swisspost-service-page-drafter": {
@@ -286,7 +286,7 @@ const RAW_TOOLS: Record<string, RawBlock> = {
     blurb: {
       en: "Persists a structured case briefing (customer / branch / region).",
       de: "Persistiert ein strukturiertes Case-Briefing (Kunde / Filiale / Region).",
-      fr: "Persiste un dossier structuré (client / filiale / région).",
+      fr: "Persiste un dossier structuré (client / store-coach / région).",
     },
     source: "authored",
   },
@@ -659,19 +659,19 @@ export interface PersonaComposition {
 }
 
 export const PERSONA_BLOCKS: Record<PersonaId, PersonaComposition> = {
-  kundenservice: {
+  "route-copilot": {
     skills: ["build-rich-answers", "render-dashboard", "swisspost-comparison"],
     tools: [...SHARED_TOOLS],
     semantic: ALL_SEMANTIC,
     infra: ALL_INFRA,
   },
-  filiale: {
+  "store-coach": {
     skills: ["swisspost-account-briefing", "swisspost-portfolio-scan", "swisspost-comparison", "watchlist"],
     tools: [...SHARED_TOOLS, "save_report", "save_watchlist", "refresh_watchlist"],
     semantic: ALL_SEMANTIC,
     infra: ALL_INFRA,
   },
-  kommunikation: {
+  "playbook-manager": {
     skills: ["swisspost-service-page-drafter", "swisspost-service-page-reviser", "digest", "build-rich-answers"],
     tools: [...SHARED_TOOLS, "create_article_draft", "update_article_draft", "publish_article", "save_digest"],
     semantic: ALL_SEMANTIC,
@@ -753,8 +753,8 @@ export interface Showcase {
 }
 
 const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
-  kundenservice: {
-    personaId: "kundenservice",
+  "route-copilot": {
+    personaId: "route-copilot",
     request: {
       en: "Priority parcels in processing by canton — with a chart.",
       de: "Priority-Pakete in Bearbeitung nach Kanton — mit Chart.",
@@ -866,8 +866,8 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
       },
     ],
   },
-  filiale: {
-    personaId: "filiale",
+  "store-coach": {
+    personaId: "store-coach",
     request: {
       en: "Account briefing for a top e-commerce customer — then save it.",
       de: "Account-Briefing für einen Top-E-Commerce-Kunden — dann speichern.",
@@ -994,8 +994,8 @@ const RAW_SHOWCASES: Record<PersonaId, RawShowcase> = {
       },
     ],
   },
-  kommunikation: {
-    personaId: "kommunikation",
+  "playbook-manager": {
+    personaId: "playbook-manager",
     request: {
       en: "Draft a service notice from current disruptions and run it through review.",
       de: "Service-Meldung aus aktuellen Störungen entwerfen und durch das Review führen.",

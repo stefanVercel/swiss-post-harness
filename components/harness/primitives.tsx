@@ -66,7 +66,7 @@ export function Primitives() {
         {cards.map((card, i) => (
           <article
             key={card.id}
-            className="hx-rise flex flex-col rounded-lg border border-border bg-card p-4 shadow-sm transition-shadow hover:shadow-md"
+            className="hx-rise flex flex-col rounded-xl border border-border bg-card p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
             style={{ animationDelay: `${i * 55}ms` }}
           >
             <div className="flex items-center gap-2.5">

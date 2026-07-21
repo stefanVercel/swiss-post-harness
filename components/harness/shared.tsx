@@ -3,9 +3,9 @@ import { cn } from "@/lib/utils"
 
 /**
  * Presentation-only building blocks shared across the /harness showcase
- * sections. Everything renders in the Swiss Post system — white cards, a yellow
- * key accent, near-black ink surfaces, hairline borders — so the showcase reads
- * as the same product as the chat harness.
+ * sections. Everything renders in the Red Bull system — clean white cards,
+ * action-red accents, deep navy surfaces, and energetic yellow details — so the
+ * showcase reads as the same product as the chat harness.
  */
 
 /** A full-bleed section band with a centered, max-width content column. */
@@ -43,9 +43,9 @@ export function Eyebrow({ children, className }: { readonly children: ReactNode;
   )
 }
 
-/** A yellow key-highlight for one word in a heading — the Swiss Post signature. */
+/** An action-red key highlight for high-impact editorial headings. */
 export function Key({ children }: { readonly children: ReactNode }) {
-  return <span className="box-decoration-clone rounded-sm bg-primary px-1.5 text-primary-foreground">{children}</span>
+  return <span className="box-decoration-clone rounded-md bg-primary px-2 text-primary-foreground">{children}</span>
 }
 
 /** Section header: eyebrow + title + optional lead. */
@@ -101,7 +101,7 @@ export function SoWhat({ children, className }: { readonly children: ReactNode; 
   return (
     <div
       className={cn(
-        "flex w-full items-start gap-3 rounded-md border border-border border-l-4 border-l-primary bg-card px-4 py-3 shadow-sm",
+        "flex w-full items-start gap-3 rounded-xl border border-border border-l-4 border-l-primary bg-card px-4 py-3 shadow-sm",
         className,
       )}
     >

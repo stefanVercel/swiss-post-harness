@@ -1,121 +1,17 @@
--- Swiss Post domain — initial schema.
--- 6 core tables: channels-equivalent (service_points), inventory-equivalent (shipments),
--- accounts (customers), catalog (tariffs), events (service_disruptions),
--- editorial source (service_pages).
---
--- Idempotent: safe to re-run.
-
--- ============================================================================
--- service_points — Filialen, Agenturen, My Post 24 lockers, business branches
--- ============================================================================
-CREATE TABLE IF NOT EXISTS public.service_points (
-  id           text PRIMARY KEY,               -- slug, e.g. "bern-schanzenpost"
-  name         text NOT NULL,
-  kind         text NOT NULL,                  -- filiale | agentur | mypost24 | business_center
-  canton       text NOT NULL,                  -- ZH, BE, VD, GE, TI, ...
-  city         text NOT NULL,
-  postal_code  text NOT NULL,
-  opens_mon_fri text,                          -- "07:30-18:30"
-  opens_sat    text,
-  opens_sun    text,
-  services     text[],                         -- {parcel, letter, cash, id_check, packstation}
-  weekly_visits_k numeric,                     -- avg thousands of customer visits / week
-  on_time_pct  numeric,                        -- SLA attainment (0-100)
-  lat          numeric,
-  lng          numeric,
-  status       text NOT NULL DEFAULT 'active'  -- active | temporarily_closed | closed
-);
-
--- ============================================================================
--- customers — business + consumer principals
--- ============================================================================
-CREATE TABLE IF NOT EXISTS public.customers (
-  id                  text PRIMARY KEY,        -- slug
-  name                text NOT NULL,
-  segment             text NOT NULL,           -- pk (Privat) | kmu | gk (Grosskunde)
-  industry            text,                    -- e-commerce, retail, finance, public, media, ...
-  primary_canton      text,
-  monthly_volume_k    numeric,                 -- k shipments / month
-  annual_revenue_chf  numeric,                 -- what Swiss Post bills this customer / year
-  is_key_account      boolean NOT NULL DEFAULT false,
-  contract_status     text,                    -- active | at_risk | renewal_due | churned
-  churn_risk_score    numeric                  -- 0-100, higher = more risk
-);
-
--- ============================================================================
--- tariffs — service catalog (A-Post, B-Post, PostPac Priority/Economy, etc.)
--- ============================================================================
-CREATE TABLE IF NOT EXISTS public.tariffs (
-  id              text PRIMARY KEY,            -- slug, e.g. "postpac-priority-2kg"
-  service         text NOT NULL,               -- a_post | b_post | postpac_priority | postpac_economy | assured
-  service_label   text NOT NULL,               -- "PostPac Priority"
-  format          text NOT NULL,               -- letter | parcel | oversize
-  weight_from_g   integer NOT NULL,
-  weight_to_g     integer NOT NULL,
-  price_chf       numeric NOT NULL,
-  transit_days_target integer,                 -- 1 for A-Post, 2-3 for B-Post
-  is_domestic     boolean NOT NULL DEFAULT true,
-  effective_from  date NOT NULL
-);
-
--- ============================================================================
--- shipments — parcels + letters (the inventory / operational grain)
--- ============================================================================
-CREATE TABLE IF NOT EXISTS public.shipments (
-  id                  text PRIMARY KEY,        -- tracking number
-  customer_id         text REFERENCES public.customers(id),
-  tariff_id           text REFERENCES public.tariffs(id),
-  origin_sp_id        text REFERENCES public.service_points(id),
-  destination_canton  text NOT NULL,
-  destination_city    text NOT NULL,
-  weight_g            integer,
-  status              text NOT NULL,           -- lodged | in_transit | out_for_delivery | delivered | returned | delayed
-  lodged_at           timestamptz NOT NULL,
-  delivered_at        timestamptz,
-  delayed_reason      text,                    -- weather | staffing | address_issue | customs | other
-  is_on_time          boolean,
-  service_label       text                     -- denormalized for grep-ability
-);
-
--- ============================================================================
--- service_disruptions — active operational issues (weather, closures, incidents)
--- ============================================================================
-CREATE TABLE IF NOT EXISTS public.service_disruptions (
-  id             text PRIMARY KEY,
-  headline       text NOT NULL,
-  cause          text NOT NULL,                -- weather | strike | road_closure | it_incident | branch_closed
-  cantons        text[],                       -- affected cantons
-  postal_codes   text[],
-  severity       text NOT NULL,                -- low | medium | high | critical
-  started_at     timestamptz NOT NULL,
-  expected_end   timestamptz,
-  status         text NOT NULL,                -- active | monitoring | resolved
-  impact_summary text,                         -- short prose
-  affected_services text[]                     -- {parcel, letter, cash, packstation}
-);
-
--- ============================================================================
--- service_pages — post.ch source content (analog of wire_stories in P7S1)
--- Feeds the editorial workflow. Anything a customer might read on post.ch.
--- ============================================================================
-CREATE TABLE IF NOT EXISTS public.service_pages (
-  id           text PRIMARY KEY,
-  category     text NOT NULL,                  -- tariffs | disruptions | how_to | holidays | product_launch | policy
-  headline     text NOT NULL,
-  source       text NOT NULL,                  -- internal_ops | pr | product | disruption_desk
-  status       text NOT NULL DEFAULT 'incoming', -- incoming | drafting | in_review | published
-  priority     text NOT NULL DEFAULT 'medium', -- low | medium | high
-  relevance_pct numeric,                       -- 0-100 editorial-scored
-  published_at timestamptz,
-  summary      text,
-  related_disruption_id text REFERENCES public.service_disruptions(id),
-  related_tariff_id     text REFERENCES public.tariffs(id)
-);
-
--- Simple indexes for the questions the agent runs most.
-CREATE INDEX IF NOT EXISTS shipments_status_idx    ON public.shipments (status);
-CREATE INDEX IF NOT EXISTS shipments_customer_idx  ON public.shipments (customer_id);
-CREATE INDEX IF NOT EXISTS shipments_lodged_idx    ON public.shipments (lodged_at DESC);
-CREATE INDEX IF NOT EXISTS service_points_canton_idx ON public.service_points (canton);
-CREATE INDEX IF NOT EXISTS disruptions_status_idx  ON public.service_disruptions (status);
-CREATE INDEX IF NOT EXISTS service_pages_status_idx ON public.service_pages (status);
+-- Synthetic Red Bull field-sales demo schema. Idempotent.
+CREATE TABLE IF NOT EXISTS public.markets (id text PRIMARY KEY, name text NOT NULL, country_code text NOT NULL, currency text NOT NULL);
+CREATE TABLE IF NOT EXISTS public.retail_accounts (id text PRIMARY KEY, market_id text REFERENCES public.markets(id), name text NOT NULL, channel text NOT NULL, tier text NOT NULL);
+CREATE TABLE IF NOT EXISTS public.stores (id text PRIMARY KEY, account_id text REFERENCES public.retail_accounts(id), name text NOT NULL, city text NOT NULL, format text NOT NULL, latitude numeric, longitude numeric, priority_score numeric NOT NULL DEFAULT 0);
+CREATE TABLE IF NOT EXISTS public.products (id text PRIMARY KEY, name text NOT NULL, category text NOT NULL, pack_size text NOT NULL, priority boolean NOT NULL DEFAULT false);
+CREATE TABLE IF NOT EXISTS public.store_product_performance (store_id text REFERENCES public.stores(id), product_id text REFERENCES public.products(id), week_start date NOT NULL, units_sold integer NOT NULL, sales_trend_pct numeric, on_shelf_availability_pct numeric, facings integer, target_facings integer, planogram_compliant boolean, PRIMARY KEY (store_id, product_id, week_start));
+CREATE TABLE IF NOT EXISTS public.key_account_agreements (id text PRIMARY KEY, account_id text REFERENCES public.retail_accounts(id), title text NOT NULL, clause_type text NOT NULL, product_id text REFERENCES public.products(id), required_facings integer, valid_from date NOT NULL, valid_to date NOT NULL, status text NOT NULL);
+CREATE TABLE IF NOT EXISTS public.routes (id text PRIMARY KEY, market_id text REFERENCES public.markets(id), owner_name text NOT NULL, route_date date NOT NULL, status text NOT NULL);
+CREATE TABLE IF NOT EXISTS public.route_stops (route_id text REFERENCES public.routes(id), store_id text REFERENCES public.stores(id), stop_order integer NOT NULL, planned_at time, objective text, PRIMARY KEY (route_id, store_id));
+CREATE TABLE IF NOT EXISTS public.store_visits (id text PRIMARY KEY, store_id text REFERENCES public.stores(id), route_id text REFERENCES public.routes(id), visited_at timestamptz, status text NOT NULL, perfect_store_score numeric, notes text);
+CREATE TABLE IF NOT EXISTS public.visit_assignments (id text PRIMARY KEY, visit_id text REFERENCES public.store_visits(id), store_id text REFERENCES public.stores(id), product_id text REFERENCES public.products(id), title text NOT NULL, rationale text NOT NULL, priority text NOT NULL, status text NOT NULL DEFAULT 'open', due_at timestamptz, completed_at timestamptz);
+CREATE TABLE IF NOT EXISTS public.huddle_briefings (id text PRIMARY KEY, market_id text REFERENCES public.markets(id), briefing_date date NOT NULL, title text NOT NULL, priorities text[] NOT NULL, message text NOT NULL);
+CREATE TABLE IF NOT EXISTS public.pocket_guide_entries (id text PRIMARY KEY, topic text NOT NULL, title text NOT NULL, body text NOT NULL, tags text[] NOT NULL);
+CREATE TABLE IF NOT EXISTS public.market_playbooks (id text PRIMARY KEY, market_id text REFERENCES public.markets(id), name text NOT NULL, version integer NOT NULL, status text NOT NULL, rules jsonb NOT NULL, created_at timestamptz NOT NULL DEFAULT now(), published_at timestamptz);
+CREATE INDEX IF NOT EXISTS stores_account_idx ON public.stores(account_id);
+CREATE INDEX IF NOT EXISTS performance_store_idx ON public.store_product_performance(store_id, week_start DESC);
+CREATE INDEX IF NOT EXISTS assignments_store_idx ON public.visit_assignments(store_id, status);

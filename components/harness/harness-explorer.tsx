@@ -51,7 +51,7 @@ export function HarnessExplorer() {
   const { locale } = useLocale()
   const c = HARNESS[locale]
   const reg = getRegistry(locale)
-  const [persona, setPersona] = useState<PersonaId>("filiale")
+  const [persona, setPersona] = useState<PersonaId>("store-coach")
   const [stepIndex, setStepIndex] = useState(0)
   const [playing, setPlaying] = useState(false)
   const transcriptRef = useRef<HTMLDivElement>(null)

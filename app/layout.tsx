@@ -12,9 +12,9 @@ const archivo = Archivo({
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
 
 export const metadata: Metadata = {
-  title: 'Swiss Post Intelligence Harness',
+  title: 'Red Bull Intelligence Harness',
   description:
-    'One agent, three teams — a Swiss Post intelligence harness with a Neon + filesystem semantic layer, savable case briefings, service dashboards and editorial drafts.',
+    'One agent, three teams — an action-ready intelligence harness with a Neon + filesystem semantic layer, savable case briefings, service dashboards and editorial drafts.',
   generator: 'v0.app',
   icons: {
     icon: [
@@ -37,7 +37,7 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   colorScheme: 'light',
-  themeColor: '#FFCC00',
+  themeColor: '#DB0A40',
 }
 
 export default function RootLayout({
