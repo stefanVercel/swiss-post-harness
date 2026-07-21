@@ -1,0 +1,15 @@
+entity: stores
+grain: one row per retail outlet
+primary_key: id
+fields:
+  id: stable store identifier
+  account_id: joins retail_accounts.id
+  name: customer-facing outlet name
+  city: outlet city
+  format: travel, supermarket, or convenience
+  priority_score: 0-100 route prioritization score
+joins:
+  - retail_accounts on stores.account_id = retail_accounts.id
+  - store_product_performance on stores.id = store_product_performance.store_id
+  - store_visits on stores.id = store_visits.store_id
+query_guidance: Resolve a store by exact or case-insensitive name before querying related entities.

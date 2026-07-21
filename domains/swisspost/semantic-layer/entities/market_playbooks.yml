@@ -1,0 +1,11 @@
+entity: market_playbooks
+grain: one version of a governed market rule set
+primary_key: id
+fields:
+  market_id: target market
+  name: playbook name
+  version: positive version number
+  status: draft, reviewed, or published
+  rules: JSON targeting and assignment rules
+  published_at: publication timestamp
+query_guidance: Preview matched stores and SKUs before saving; publish only a named version after explicit approval.

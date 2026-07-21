@@ -81,7 +81,11 @@ export function buildGroundingContext(): string {
     "## glossary.yml (map user terms -> columns)",
     s.glossary,
     "",
-    "## Retrievable detail docs (use the read_semantic_doc tool):",
+    "## Exact entity schemas",
+    "Use only columns documented below. Never invent or rename a column. If a query fails, inspect the relevant entity document and correct the query once rather than guessing repeatedly.",
+    ...Object.entries(s.entities).map(([name, body]) => `### ${name}\n${body}`),
+    "",
+    "## Retrievable workflow guides (use the read_semantic_doc tool):",
     `- entities: ${entityNames}`,
     `- guides: ${guideNames}`,
   ].join("\n")
